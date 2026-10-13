@@ -1,0 +1,14 @@
+{
+    "cleanUrls": true,
+    "trailingSlash": false,
+    "rewrites": [
+        {
+            "source": "/(about|pillars|benefits|reviews|programmes|admissions|fees|gallery|news|contact|visit|faq|main)",
+            "destination": "/index.html"
+        },
+        {
+            "source": "/programmes/:path*",
+            "destination": "/index.html"
+        }
+    ]
+}

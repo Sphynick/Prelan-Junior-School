@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parent Portal Login | Prelan Junior School</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="icon" type="image/svg+xml" href="/assets/images/prelan_logo.svg">
+  <link rel="alternate icon" href="/favicon.svg">
+</head>
+<body class="auth-page">
+  <div class="auth-card">
+    <div class="auth-header">
+      <a href="/" title="Back to Prelan Junior School">
+        <img src="/assets/images/prelan_logo.svg" alt="Prelan Junior School Logo" style="max-width: 170px; height: auto; margin: 0 auto 1.25rem; display: block; border-radius: 8px; box-shadow: var(--shadow-sm);">
+      </a>
+      <h1 class="auth-title">Parent Portal</h1>
+      <p class="auth-subtitle">Prelan Junior School • Nyathuna, Ngecha</p>
+    </div>
+
+    <!-- Alert / Notice -->
+    <div id="portal-login-alert" style="display: none; padding: 0.75rem 1rem; border-radius: var(--radius-md); font-size: 0.875rem; margin-bottom: 1.25rem;"></div>
+
+    <form id="portal-login-form">
+      <div class="form-group" style="margin-bottom: 1.15rem;">
+        <label for="portal-email" class="form-label">Registered Parent Email</label>
+        <input type="email" id="portal-email" name="email" class="form-control" placeholder="parent@example.com" required autocomplete="username">
+        <span class="form-hint">Email registered by the school administration</span>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 1.25rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <label for="portal-password" class="form-label">Password</label>
+          <button type="button" id="portal-forgot-password-link" style="font-size: 0.8rem; color: var(--color-primary); font-weight: 700;">Forgot Password?</button>
+        </div>
+        <input type="password" id="portal-password" name="password" class="form-control" placeholder="••••••••" required autocomplete="current-password">
+      </div>
+
+      <button type="submit" id="portal-login-btn" class="btn btn-primary btn-block btn-lg" style="margin-bottom: 1rem;">
+        <span>Sign In to Parent Portal</span>
+      </button>
+
+      <div style="text-align: center; margin-top: 1.25rem; font-size: 0.85rem; color: var(--color-slate-500); line-height: 1.6;">
+        <p>No public registration. Accounts are issued exclusively by school administration upon learner admission.</p>
+        <p style="margin-top: 0.5rem;">
+          <a href="/" style="color: var(--color-primary); font-weight: 700;">&larr; Return to Public Website</a>
+          <span style="margin: 0 0.5rem; color: #cbd5e1;">|</span>
+          <a href="/admin/login.html" style="color: var(--color-slate-600); font-weight: 700;">Staff Admin</a>
+        </p>
+      </div>
+    </form>
+  </div>
+
+  <!-- Forgot Password Modal -->
+  <div class="modal-overlay" id="portal-forgot-modal" role="dialog" aria-modal="true" aria-label="Reset Parent Password">
+    <div class="modal-card" style="max-width: 440px;">
+      <button type="button" class="modal-close-btn" id="portal-forgot-close">&times;</button>
+      <h3 style="font-size: 1.35rem; color: var(--color-primary-dark); margin-bottom: 0.5rem;">Reset Parent Password</h3>
+      <p style="font-size: 0.9rem; color: var(--color-slate-600); margin-bottom: 1.25rem;">
+        Enter your registered email. We will send an official Firebase password reset link to your inbox.
+      </p>
+
+      <form id="portal-forgot-form">
+        <div class="form-group" style="margin-bottom: 1.25rem;">
+          <label for="portal-reset-email" class="form-label">Your Email Address</label>
+          <input type="email" id="portal-reset-email" class="form-control" placeholder="parent@example.com" required>
+        </div>
+        <button type="submit" id="portal-reset-submit-btn" class="btn btn-primary btn-block">Send Password Reset Link</button>
+      </form>
+    </div>
+  </div>
+
+  <script type="module" src="/js/portal-login.js"></script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+{
+  "hosting": {
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**",
+      "README.md",
+      "firestore.rules",
+      "storage.rules",
+      "package.json",
+      "package-lock.json",
+      "tsconfig.json",
+      "vite.config.ts"
+    ],
+    "cleanUrls": true,
+    "trailingSlash": false,
+    "rewrites": [
+      {
+        "source": "/(about|pillars|benefits|reviews|programmes|programmes/**|admissions|fees|gallery|news|contact|visit|faq|main)",
+        "destination": "/index.html"
+      }
+    ]
+  },
+  "firestore": {
+    "rules": "firestore.rules"
+  },
+  "storage": {
+    "rules": "storage.rules"
+  }
+}

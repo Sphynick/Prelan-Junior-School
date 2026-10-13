@@ -1,0 +1,127 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    function isOwner() {
+      return isAdmin() &&
+        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role == 'owner';
+    }
+
+    function isParent(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // 1. Admins Collection:
+    // Only administrators can read. Only an admin with role == 'owner' can create, update, or delete admins.
+    match /admins/{adminId} {
+      allow read: if isAdmin();
+      allow write: if isOwner();
+    }
+
+    // 2. Parents Collection:
+    // Parents can read only their own profile. Admins can read and write all parents.
+    match /parents/{parentId} {
+      allow read: if isAdmin() || isParent(parentId);
+      allow write: if isAdmin();
+    }
+
+    // 3. Visits & Applications Collection:
+    // Public may CREATE only with valid fields and rate-friendly payload size.
+    // Public cannot read, update, or delete. Admins have full access.
+    match /visits/{visitId} {
+      allow read, update, delete: if isAdmin();
+      allow create: if request.resource.data.parent is string
+                    && request.resource.data.parent.size() > 0
+                    && request.resource.data.parent.size() <= 120
+                    && request.resource.data.phone is string
+                    && request.resource.data.phone.size() > 5
+                    && request.resource.data.phone.size() <= 30
+                    && request.resource.data.child is string
+                    && request.resource.data.child.size() > 0
+                    && request.resource.data.child.size() <= 120
+                    && request.resource.data.grade is string
+                    && request.resource.data.grade.size() <= 50
+                    && (request.resource.data.status in ['New', 'Contacted', 'Visited', 'Enrolled'])
+                    && (!('email' in request.resource.data) || request.resource.data.email is string)
+                    && (!('message' in request.resource.data) || request.resource.data.message.size() <= 1000);
+    }
+
+    // 4. Newsletter Subscribers Collection:
+    // Public may create only. Public cannot read or delete.
+    match /subscribers/{subscriberId} {
+      allow read, delete: if isAdmin();
+      allow create: if request.resource.data.email is string
+                    && request.resource.data.email.size() > 5
+                    && request.resource.data.email.size() <= 120;
+    }
+
+    // 5. Payments Collection:
+    // Admins can read, create, update, delete all payments.
+    // A parent can only read payments where parentUid == their own auth uid.
+    match /payments/{paymentId} {
+      allow read: if isAdmin() || (isAuthenticated() && resource.data.parentUid == request.auth.uid);
+      allow write: if isAdmin();
+    }
+
+    // 6. News & Posts Collection:
+    // Public can read published posts. Admins have full access.
+    match /news/{newsId} {
+      allow read: if resource.data.published == true || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // 7. Gallery Collection:
+    // Public can read. Admins have full access.
+    match /gallery/{photoId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 8. FAQ Collection:
+    // Public can read. Admins have full access.
+    match /faq/{faqId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 9. Reviews Collection:
+    // Public can read only approved reviews.
+    // Public can CREATE a review with approved == false (pending admin review).
+    // Admins have full access.
+    match /reviews/{reviewId} {
+      allow read: if resource.data.approved == true || isAdmin();
+      allow create: if request.resource.data.approved == false
+                    && request.resource.data.author is string
+                    && request.resource.data.author.size() > 0
+                    && request.resource.data.author.size() <= 100
+                    && request.resource.data.content is string
+                    && request.resource.data.content.size() > 0
+                    && request.resource.data.content.size() <= 1500;
+      allow update, delete: if isAdmin();
+    }
+
+    // 10. Fees & Paybill:
+    // Public can read. Admins can update.
+    match /fees/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 11. Settings (Contact, Hero, Alert Banner):
+    // Public can read. Admins can update.
+    match /settings/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}

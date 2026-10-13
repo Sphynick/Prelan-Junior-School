@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | Prelan Junior School</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="icon" type="image/svg+xml" href="/assets/images/prelan_logo.svg">
+  <link rel="alternate icon" href="/favicon.svg">
+</head>
+<body>
+  <div class="dashboard-shell">
+    <!-- Sidebar -->
+    <aside class="dashboard-sidebar" id="dashboard-sidebar">
+      <div class="sidebar-header">
+        <img src="/assets/images/prelan_logo.svg" alt="Prelan Junior School" style="width: 48px; height: 34px; object-fit: contain; border-radius: 4px; flex-shrink: 0; background: #fff; padding: 2px;">
+        <div>
+          <div class="sidebar-brand-name">PRELAN ADMIN</div>
+          <div style="font-size: 0.75rem; color: var(--color-gold);">Nyathuna, Ngecha</div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav" aria-label="Dashboard Tabs">
+        <button type="button" class="sidebar-tab-btn active" data-tab="tab-visits">
+          <span class="sidebar-tab-icon">📋</span>
+          <span>Visits & Applications</span>
+        </button>
+        <button type="button" class="sidebar-tab-btn" data-tab="tab-news">
+          <span class="sidebar-tab-icon">📰</span>
+          <span>News & Posts</span>
+        </button>
+        <button type="button" class="sidebar-tab-btn" data-tab="tab-gallery">
+          <span class="sidebar-tab-icon">🖼️</span>
+          <span>Campus Gallery</span>
+        </button>
+        <button type="button" class="sidebar-tab-btn" data-tab="tab-fees">
+          <span class="sidebar-tab-icon">💰</span>
+          <span>Fees & Paybill</span>
+        </button>
+        <button type="button" class="sidebar-tab-btn" data-tab="tab-faqs-reviews">
+          <span class="sidebar-tab-icon">⭐</span>
+          <span>FAQs & Reviews</span>
+        </button>
+        <button type="button" class="sidebar-tab-btn" data-tab="tab-settings">
+          <span class="sidebar-tab-icon">⚙️</span>
+          <span>Site Settings</span>
+        </button>
+        <button type="button" class="sidebar-tab-btn" data-tab="tab-subscribers">
+          <span class="sidebar-tab-icon">✉️</span>
+          <span>Subscribers</span>
+        </button>
+        <button type="button" class="sidebar-tab-btn" data-tab="tab-parents">
+          <span class="sidebar-tab-icon">👨‍👩‍👦</span>
+          <span>Parents & Learners</span>
+        </button>
+        <button type="button" class="sidebar-tab-btn" data-tab="tab-payments">
+          <span class="sidebar-tab-icon">💳</span>
+          <span>Fee Payments (M-Pesa)</span>
+        </button>
+        <!-- Owner Only Tab -->
+        <button type="button" class="sidebar-tab-btn" id="tab-btn-admins" data-tab="tab-admins" style="display: none;">
+          <span class="sidebar-tab-icon">👑</span>
+          <span>Admin Users (Owner)</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div style="font-size: 0.8rem;">
+          <div id="admin-user-email" style="font-weight: 700; color: #fff; text-overflow: ellipsis; overflow: hidden; width: 140px; white-space: nowrap;">Admin</div>
+          <div id="admin-user-role" style="color: var(--color-gold); font-size: 0.7rem; text-transform: uppercase;">Staff</div>
+        </div>
+        <button type="button" id="admin-logout-btn" class="btn btn-sm btn-outline" style="border-color: #cbd5e1; color: #cbd5e1; padding: 0.35rem 0.75rem;">
+          Logout
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="dashboard-main">
+      <!-- Topbar -->
+      <header class="dashboard-topbar">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <button type="button" id="sidebar-toggle-btn" class="mobile-toggle" aria-label="Toggle Sidebar">☰</button>
+          <h1 style="font-size: 1.4rem; color: var(--color-primary-dark);" id="dashboard-page-title">Visits & Applications</h1>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 1.25rem;">
+          <div style="font-size: 0.8rem; color: var(--color-slate-500); display: none; @media(min-width: 600px){display: block;}">
+            Auto-logout: <span id="inactivity-timer" style="font-weight: 700; color: var(--color-primary);">30:00</span>
+          </div>
+          <a href="/" target="_blank" class="btn btn-sm btn-outline" style="font-size: 0.8rem;">View Public Site ↗</a>
+        </div>
+      </header>
+
+      <div class="dashboard-content">
+        <!-- Storage Plan Notice / Helper -->
+        <div id="storage-mode-banner" style="background: var(--color-mint); border: 1px solid var(--color-mint-border); padding: 0.75rem 1.25rem; border-radius: var(--radius-md); font-size: 0.85rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+          <div>
+            <strong>Storage Mode:</strong> <span id="storage-mode-text">Spark Free Tier (Base64 compressed photos &lt;200KB)</span>.
+          </div>
+          <span style="font-size: 0.75rem; color: var(--color-slate-500);">Configured in <code>js/firebase-config.js</code></span>
+        </div>
+
+        <!-- ==================================================================
+             TAB 1: VISITS & APPLICATIONS
+             ================================================================== -->
+        <section id="tab-visits" class="tab-panel active">
+          <!-- Metric counters -->
+          <div class="stats-row">
+            <div class="metric-card">
+              <div class="metric-label">Total Submissions</div>
+              <div class="metric-number" id="metric-visits-total">0</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">New / Pending</div>
+              <div class="metric-number" id="metric-visits-new" style="color: var(--color-warning);">0</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Contacted</div>
+              <div class="metric-number" id="metric-visits-contacted" style="color: #0284c7;">0</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Enrolled Learners</div>
+              <div class="metric-number" id="metric-visits-enrolled" style="color: var(--color-success);">0</div>
+            </div>
+          </div>
+
+          <div class="panel-card">
+            <div class="panel-header">
+              <h2 class="panel-title">Visit Requests & Admission Applications</h2>
+              <div class="table-toolbar">
+                <input type="search" id="visits-search-input" class="search-input" placeholder="Search parent, child, phone...">
+                <select id="visits-status-filter" class="search-input">
+                  <option value="all">All Statuses</option>
+                  <option value="New">New</option>
+                  <option value="Contacted">Contacted</option>
+                  <option value="Visited">Visited</option>
+                  <option value="Enrolled">Enrolled</option>
+                </select>
+                <button type="button" id="export-visits-csv-btn" class="btn btn-sm btn-outline">Export CSV</button>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="fees-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Parent Name</th>
+                    <th>Phone (Kenyan)</th>
+                    <th>Learner</th>
+                    <th>Grade</th>
+                    <th>Status</th>
+                    <th>Notes</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="visits-table-body">
+                  <tr><td colspan="8" style="text-align: center; color: var(--color-slate-500); padding: 2rem;">Loading visit requests...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================================================================
+             TAB 2: NEWS & POSTS
+             ================================================================== -->
+        <section id="tab-news" class="tab-panel">
+          <div class="panel-card">
+            <div class="panel-header">
+              <h2 class="panel-title">School News & Announcements</h2>
+              <button type="button" id="open-new-post-btn" class="btn btn-sm btn-primary">+ Add New Post</button>
+            </div>
+
+            <div class="table-responsive">
+              <table class="fees-table">
+                <thead>
+                  <tr>
+                    <th>Image</th>
+                    <th>Title</th>
+                    <th>Date / Term</th>
+                    <th>Summary</th>
+                    <th>Published</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="news-table-body">
+                  <tr><td colspan="6" style="text-align: center; padding: 2rem;">Loading news posts...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================================================================
+             TAB 3: CAMPUS GALLERY
+             ================================================================== -->
+        <section id="tab-gallery" class="tab-panel">
+          <div class="panel-card">
+            <div class="panel-header">
+              <h2 class="panel-title">Campus & Learner Gallery Photos</h2>
+              <button type="button" id="open-new-photo-btn" class="btn btn-sm btn-primary">+ Upload / Add Photo</button>
+            </div>
+
+            <div class="gallery-grid" id="admin-gallery-grid">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================================================================
+             TAB 4: FEES & PAYBILL
+             ================================================================== -->
+        <section id="tab-fees" class="tab-panel">
+          <div class="panel-card">
+            <div class="panel-header">
+              <h2 class="panel-title">M-Pesa Paybill Settings</h2>
+              <button type="button" id="save-paybill-btn" class="btn btn-sm btn-primary">Save Paybill Changes</button>
+            </div>
+
+            <div class="form-grid form-grid-2" style="margin-bottom: 2rem;">
+              <div class="form-group">
+                <label for="admin-pb-number" class="form-label">Business / Paybill Number</label>
+                <input type="text" id="admin-pb-number" class="form-control" placeholder="000000">
+              </div>
+              <div class="form-group">
+                <label for="admin-pb-account" class="form-label">Account Format Instruction</label>
+                <input type="text" id="admin-pb-account" class="form-control" placeholder="Learner Adm No. / Name">
+              </div>
+              <div class="form-group">
+                <label for="admin-pb-name" class="form-label">Official Registered Account Name</label>
+                <input type="text" id="admin-pb-name" class="form-control" placeholder="Prelan Junior School">
+              </div>
+            </div>
+
+            <div class="panel-header" style="border-top: 1px solid var(--color-slate-200); padding-top: 1.5rem;">
+              <h2 class="panel-title">Termly Fees Structure Table (KES)</h2>
+              <button type="button" id="save-fees-table-btn" class="btn btn-sm btn-primary">Save Fees Table</button>
+            </div>
+
+            <p style="font-size: 0.85rem; color: var(--color-slate-500); margin-bottom: 1rem;">
+              Edit termly figures. Use placeholders like <code>____</code> if figures are pending confirmation.
+            </p>
+
+            <div class="table-responsive">
+              <table class="fees-table">
+                <thead>
+                  <tr>
+                    <th>Programme Level</th>
+                    <th>Grades</th>
+                    <th>Termly Tuition (KES)</th>
+                    <th>Meals & Inclusions</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-fees-tbody">
+                  <!-- Rendered via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================================================================
+             TAB 5: FAQS & REVIEWS
+             ================================================================== -->
+        <section id="tab-faqs-reviews" class="tab-panel">
+          <!-- FAQs Management -->
+          <div class="panel-card" style="margin-bottom: 2rem;">
+            <div class="panel-header">
+              <h2 class="panel-title">Frequently Asked Questions</h2>
+              <button type="button" id="open-new-faq-btn" class="btn btn-sm btn-primary">+ Add FAQ Item</button>
+            </div>
+            <div class="table-responsive">
+              <table class="fees-table">
+                <thead>
+                  <tr>
+                    <th>Order</th>
+                    <th>Question</th>
+                    <th>Answer</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="faqs-table-body">
+                  <!-- Rendered via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Reviews Approval -->
+          <div class="panel-card">
+            <div class="panel-header">
+              <h2 class="panel-title">Parent Reviews (Approval System)</h2>
+              <p style="font-size: 0.85rem; color: var(--color-slate-500);">
+                Public reviews are hidden until approved by an administrator.
+              </p>
+            </div>
+            <div class="table-responsive">
+              <table class="fees-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Author</th>
+                    <th>Child Class</th>
+                    <th>Rating</th>
+                    <th>Review Content</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="reviews-table-body">
+                  <!-- Rendered via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================================================================
+             TAB 6: SITE SETTINGS
+             ================================================================== -->
+        <section id="tab-settings" class="tab-panel">
+          <div class="panel-card">
+            <div class="panel-header">
+              <h2 class="panel-title">School Contact & Website Settings</h2>
+              <button type="button" id="save-settings-btn" class="btn btn-primary">Save Settings</button>
+            </div>
+
+            <form id="site-settings-form">
+              <div class="form-grid form-grid-2" style="margin-bottom: 1.5rem;">
+                <div class="form-group">
+                  <label for="sett-phone" class="form-label">School Phone Number</label>
+                  <input type="text" id="sett-phone" name="phone" class="form-control" placeholder="+254 700 000 000">
+                </div>
+                <div class="form-group">
+                  <label for="sett-whatsapp" class="form-label">WhatsApp Admissions Phone</label>
+                  <input type="text" id="sett-whatsapp" name="whatsapp" class="form-control" placeholder="+254 700 000 000">
+                </div>
+                <div class="form-group">
+                  <label for="sett-email" class="form-label">Official Email</label>
+                  <input type="email" id="sett-email" name="email" class="form-control" placeholder="info@prelanjuniorschool.sc.ke">
+                </div>
+                <div class="form-group">
+                  <label for="sett-address" class="form-label">School Address / Location</label>
+                  <input type="text" id="sett-address" name="address" class="form-control" placeholder="Nyathuna, Ngecha, Kiambu County, Kenya">
+                </div>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label for="sett-hours" class="form-label">Office Working Hours</label>
+                <input type="text" id="sett-hours" name="officeHours" class="form-control" placeholder="Mon – Fri: 7:30 AM – 4:30 PM | Sat: 8:30 AM – 12:30 PM">
+              </div>
+
+              <div style="border-top: 1px solid var(--color-slate-200); padding-top: 1.5rem; margin-top: 1.5rem;">
+                <h3 style="font-size: 1.15rem; color: var(--color-primary-dark); margin-bottom: 1rem;">Homepage Hero & Admission Banner</h3>
+
+                <div class="form-group" style="margin-bottom: 1rem;">
+                  <label for="sett-hero-title" class="form-label">Hero Main Headline</label>
+                  <input type="text" id="sett-hero-title" name="heroTitle" class="form-control" placeholder="Nurturing Every Learner's Potential Through CBC Excellence">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1rem;">
+                  <label for="sett-hero-sub" class="form-label">Hero Subtitle Paragraph</label>
+                  <textarea id="sett-hero-sub" name="heroSubtitle" class="form-control" rows="2"></textarea>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1rem;">
+                  <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-weight: 700;">
+                    <input type="checkbox" id="sett-banner-toggle" name="admissionBannerOpen">
+                    <span>Show "Admissions Open" Top Notification Banner</span>
+                  </label>
+                </div>
+
+                <div class="form-group">
+                  <label for="sett-banner-text" class="form-label">Admission Banner Announcement Text</label>
+                  <input type="text" id="sett-banner-text" name="admissionBannerText" class="form-control">
+                </div>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <!-- ==================================================================
+             TAB 7: NEWSLETTER SUBSCRIBERS
+             ================================================================== -->
+        <section id="tab-subscribers" class="tab-panel">
+          <div class="panel-card">
+            <div class="panel-header">
+              <h2 class="panel-title">Newsletter Subscribers</h2>
+              <button type="button" id="export-subs-csv-btn" class="btn btn-sm btn-outline">Export Emails (CSV)</button>
+            </div>
+
+            <div class="table-responsive">
+              <table class="fees-table">
+                <thead>
+                  <tr>
+                    <th>Date Subscribed</th>
+                    <th>Email Address</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="subscribers-table-body">
+                  <!-- Rendered via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================================================================
+             TAB 8: PARENTS & LEARNERS
+             ================================================================== -->
+        <section id="tab-parents" class="tab-panel">
+          <div class="panel-card">
+            <div class="panel-header">
+              <div>
+                <h2 class="panel-title">Parents & Registered Learners</h2>
+                <p style="font-size: 0.85rem; color: var(--color-slate-500);">
+                  Parents cannot register publicly. Only school administration can create accounts.
+                </p>
+              </div>
+              <button type="button" id="open-new-parent-btn" class="btn btn-sm btn-primary">+ Create Parent Account</button>
+            </div>
+
+            <div class="table-responsive">
+              <table class="fees-table">
+                <thead>
+                  <tr>
+                    <th>Parent Name</th>
+                    <th>Email (Login)</th>
+                    <th>Phone</th>
+                    <th>Linked Learner(s) & Grade</th>
+                    <th>Fee Balance</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="parents-table-body">
+                  <!-- Rendered via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================================================================
+             TAB 9: FEE PAYMENTS (M-PESA)
+             ================================================================== -->
+        <section id="tab-payments" class="tab-panel">
+          <div class="panel-card">
+            <div class="panel-header">
+              <div>
+                <h2 class="panel-title">Fee Payments & M-Pesa Entries</h2>
+                <p style="font-size: 0.85rem; color: var(--color-slate-500);">
+                  Manual payment entries verified by administration. Auto-updates parent balance.
+                </p>
+              </div>
+              <div class="table-toolbar">
+                <button type="button" id="open-record-payment-btn" class="btn btn-sm btn-primary">+ Record Payment</button>
+                <button type="button" id="export-payments-csv-btn" class="btn btn-sm btn-outline">Export CSV</button>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="fees-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>M-Pesa Reference</th>
+                    <th>Parent / Learner</th>
+                    <th>Term</th>
+                    <th>Amount (KES)</th>
+                    <th>Notes</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="payments-table-body">
+                  <!-- Rendered via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================================================================
+             TAB 10: ADMIN USERS (OWNER ONLY)
+             ================================================================== -->
+        <section id="tab-admins" class="tab-panel">
+          <div class="panel-card">
+            <div class="panel-header">
+              <div>
+                <h2 class="panel-title">School Administrator Accounts</h2>
+                <span class="badge" style="background: var(--color-gold); color: var(--color-primary-dark); font-weight: 800;">Owner Only</span>
+              </div>
+              <button type="button" id="open-new-admin-btn" class="btn btn-sm btn-primary">+ Add New Administrator</button>
+            </div>
+
+            <div class="table-responsive">
+              <table class="fees-table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="admins-table-body">
+                  <!-- Rendered via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ========================================================================
+       MODALS FOR ADMIN OPERATIONS
+       ======================================================================== -->
+
+  <!-- Modal: Visit Request Details & Notes -->
+  <div class="modal-overlay" id="modal-visit-details">
+    <div class="modal-card">
+      <button type="button" class="modal-close-btn" data-close-modal>&times;</button>
+      <h3 style="font-size: 1.35rem; color: var(--color-primary-dark); margin-bottom: 0.5rem;">Visit Request Details</h3>
+      <div id="visit-detail-content" style="margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.6;"></div>
+
+      <form id="visit-status-form">
+        <input type="hidden" id="visit-detail-id">
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label for="visit-detail-status" class="form-label">Application Status</label>
+          <select id="visit-detail-status" class="form-control">
+            <option value="New">New</option>
+            <option value="Contacted">Contacted</option>
+            <option value="Visited">Visited</option>
+            <option value="Enrolled">Enrolled</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom: 1.5rem;">
+          <label for="visit-detail-notes" class="form-label">Internal Staff Notes</label>
+          <textarea id="visit-detail-notes" class="form-control" rows="3" placeholder="Called parent, scheduled visit for Friday 10am..."></textarea>
+        </div>
+        <div style="display: flex; gap: 0.75rem;">
+          <button type="submit" class="btn btn-primary btn-block">Save Status & Notes</button>
+          <button type="button" id="delete-visit-btn" class="btn btn-outline" style="border-color: var(--color-danger); color: var(--color-danger);">Delete</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Create / Edit News Post -->
+  <div class="modal-overlay" id="modal-news">
+    <div class="modal-card">
+      <button type="button" class="modal-close-btn" data-close-modal>&times;</button>
+      <h3 id="news-modal-title" style="font-size: 1.35rem; color: var(--color-primary-dark); margin-bottom: 1rem;">Add News Post</h3>
+
+      <form id="news-form">
+        <input type="hidden" id="news-edit-id">
+
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label for="news-title-input" class="form-label">Post Title *</label>
+          <input type="text" id="news-title-input" class="form-control" required placeholder="e.g. End of Term Prize Giving Day">
+        </div>
+
+        <div class="form-grid form-grid-2" style="margin-bottom: 1rem;">
+          <div class="form-group">
+            <label for="news-date-input" class="form-label">Display Date / Term</label>
+            <input type="text" id="news-date-input" class="form-control" placeholder="e.g. Term 2, 2025">
+          </div>
+          <div class="form-group">
+            <label for="news-published-input" class="form-label">Visibility</label>
+            <select id="news-published-input" class="form-control">
+              <option value="true">Published (Live)</option>
+              <option value="false">Draft (Hidden)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label for="news-image-file" class="form-label">Featured Image (Upload file or paste URL)</label>
+          <input type="file" id="news-image-file" class="form-control" accept="image/*">
+          <input type="url" id="news-image-url" class="form-control" style="margin-top: 0.5rem;" placeholder="Or paste image URL (https://...)">
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label for="news-summary-input" class="form-label">Short Summary (Shows on Homepage) *</label>
+          <textarea id="news-summary-input" class="form-control" rows="2" required></textarea>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1.5rem;">
+          <label for="news-body-input" class="form-label">Full Announcement Body</label>
+          <textarea id="news-body-input" class="form-control" rows="4"></textarea>
+        </div>
+
+        <button type="submit" id="save-news-submit-btn" class="btn btn-primary btn-block">Save News Post</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Upload Gallery Image -->
+  <div class="modal-overlay" id="modal-gallery">
+    <div class="modal-card">
+      <button type="button" class="modal-close-btn" data-close-modal>&times;</button>
+      <h3 style="font-size: 1.35rem; color: var(--color-primary-dark); margin-bottom: 1rem;">Add Photo to Gallery</h3>
+
+      <form id="gallery-form">
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label for="gal-title" class="form-label">Photo Caption / Title *</label>
+          <input type="text" id="gal-title" class="form-control" placeholder="e.g. Science Laboratory Project" required>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label for="gal-cat" class="form-label">Category *</label>
+          <select id="gal-cat" class="form-control" required>
+            <option value="Grounds">Grounds</option>
+            <option value="Classrooms">Classrooms</option>
+            <option value="Clubs">Clubs</option>
+            <option value="Events">Events</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1.5rem;">
+          <label for="gal-file" class="form-label">Photo (Upload file or URL) *</label>
+          <input type="file" id="gal-file" class="form-control" accept="image/*">
+          <input type="url" id="gal-url" class="form-control" style="margin-top: 0.5rem;" placeholder="Or paste image URL (https://...)">
+          <span class="form-hint">Images are automatically resized and compressed.</span>
+        </div>
+
+        <button type="submit" id="save-gallery-submit-btn" class="btn btn-primary btn-block">Add to Gallery</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Add / Edit FAQ -->
+  <div class="modal-overlay" id="modal-faq">
+    <div class="modal-card">
+      <button type="button" class="modal-close-btn" data-close-modal>&times;</button>
+      <h3 id="faq-modal-title" style="font-size: 1.35rem; color: var(--color-primary-dark); margin-bottom: 1rem;">Add FAQ Item</h3>
+
+      <form id="faq-form">
+        <input type="hidden" id="faq-edit-id">
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label for="faq-question-input" class="form-label">Question *</label>
+          <input type="text" id="faq-question-input" class="form-control" required>
+        </div>
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label for="faq-answer-input" class="form-label">Answer *</label>
+          <textarea id="faq-answer-input" class="form-control" rows="4" required></textarea>
+        </div>
+        <div class="form-group" style="margin-bottom: 1.5rem;">
+          <label for="faq-order-input" class="form-label">Display Order (e.g. 1, 2, 3)</label>
+          <input type="number" id="faq-order-input" class="form-control" value="1">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Save FAQ</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Create Parent Account (Uses Secondary Auth Instance) -->
+  <div class="modal-overlay" id="modal-parent">
+    <div class="modal-card">
+      <button type="button" class="modal-close-btn" data-close-modal>&times;</button>
+      <h3 style="font-size: 1.35rem; color: var(--color-primary-dark); margin-bottom: 0.5rem;">Create Parent Portal Account</h3>
+      <p style="font-size: 0.85rem; color: var(--color-slate-500); margin-bottom: 1.25rem;">
+        Creates a secure Firebase Auth credential for the parent and links their child's details. Admin remains logged in.
+      </p>
+
+      <form id="create-parent-form">
+        <div class="form-grid form-grid-2" style="margin-bottom: 1rem;">
+          <div class="form-group">
+            <label for="parent-name" class="form-label">Parent / Guardian Name *</label>
+            <input type="text" id="parent-name" class="form-control" required placeholder="e.g. Grace Wanjiru">
+          </div>
+          <div class="form-group">
+            <label for="parent-phone" class="form-label">Phone Number *</label>
+            <input type="tel" id="parent-phone" class="form-control" required placeholder="0712 345 678">
+          </div>
+        </div>
+
+        <div class="form-grid form-grid-2" style="margin-bottom: 1rem;">
+          <div class="form-group">
+            <label for="parent-email" class="form-label">Login Email *</label>
+            <input type="email" id="parent-email" class="form-control" required placeholder="parent@example.com">
+          </div>
+          <div class="form-group">
+            <label for="parent-temp-pass" class="form-label">Temporary Password *</label>
+            <input type="text" id="parent-temp-pass" class="form-control" required value="Prelan2025#" placeholder="At least 6 characters">
+          </div>
+        </div>
+
+        <div style="border-top: 1px solid var(--color-slate-200); padding-top: 1rem; margin-top: 1rem;">
+          <h4 style="font-size: 1rem; color: var(--color-primary-dark); margin-bottom: 0.75rem;">Learner / Child Details</h4>
+          
+          <div class="form-grid form-grid-2" style="margin-bottom: 1rem;">
+            <div class="form-group">
+              <label for="learner-name" class="form-label">Learner's Full Name *</label>
+              <input type="text" id="learner-name" class="form-control" required placeholder="e.g. Kevin Kamau">
+            </div>
+            <div class="form-group">
+              <label for="learner-adm" class="form-label">Admission Number *</label>
+              <input type="text" id="learner-adm" class="form-control" required placeholder="e.g. PJS/2025/082">
+            </div>
+          </div>
+
+          <div class="form-grid form-grid-2" style="margin-bottom: 1rem;">
+            <div class="form-group">
+              <label for="learner-grade" class="form-label">Grade / Class *</label>
+              <select id="learner-grade" class="form-control" required>
+                <option value="PP1">Pre-Primary 1 (PP1)</option>
+                <option value="PP2">Pre-Primary 2 (PP2)</option>
+                <option value="Grade 1">Grade 1</option>
+                <option value="Grade 2">Grade 2</option>
+                <option value="Grade 3">Grade 3</option>
+                <option value="Grade 4">Grade 4</option>
+                <option value="Grade 5">Grade 5</option>
+                <option value="Grade 6">Grade 6</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="initial-balance" class="form-label">Initial Term Fee Balance (KES)</label>
+              <input type="number" id="initial-balance" class="form-control" value="0">
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" id="create-parent-submit-btn" class="btn btn-primary btn-block" style="margin-top: 1rem;">
+          Create Parent Account
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Record Payment -->
+  <div class="modal-overlay" id="modal-payment">
+    <div class="modal-card">
+      <button type="button" class="modal-close-btn" data-close-modal>&times;</button>
+      <h3 style="font-size: 1.35rem; color: var(--color-primary-dark); margin-bottom: 1rem;">Record Fee Payment</h3>
+
+      <form id="record-payment-form">
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label for="pay-parent-select" class="form-label">Select Parent / Learner *</label>
+          <select id="pay-parent-select" class="form-control" required>
+            <option value="" disabled selected>Select Parent</option>
+          </select>
+        </div>
+
+        <div class="form-grid form-grid-2" style="margin-bottom: 1rem;">
+          <div class="form-group">
+            <label for="pay-amount" class="form-label">Amount Paid (KES) *</label>
+            <input type="number" id="pay-amount" class="form-control" required min="1" placeholder="e.g. 15000">
+          </div>
+          <div class="form-group">
+            <label for="pay-mpesa-ref" class="form-label">M-Pesa Reference / Code *</label>
+            <input type="text" id="pay-mpesa-ref" class="form-control" required placeholder="e.g. QK892HY1KL">
+          </div>
+        </div>
+
+        <div class="form-grid form-grid-2" style="margin-bottom: 1rem;">
+          <div class="form-group">
+            <label for="pay-date" class="form-label">Payment Date *</label>
+            <input type="date" id="pay-date" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="pay-term" class="form-label">Academic Term</label>
+            <select id="pay-term" class="form-control">
+              <option value="Term 1 2025">Term 1 2025</option>
+              <option value="Term 2 2025">Term 2 2025</option>
+              <option value="Term 3 2025">Term 3 2025</option>
+              <option value="Term 1 2026">Term 1 2026</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1.5rem;">
+          <label for="pay-notes" class="form-label">Notes / Receipt Description</label>
+          <input type="text" id="pay-notes" class="form-control" placeholder="Tuition fee instalment / Transport">
+        </div>
+
+        <button type="submit" id="save-payment-submit-btn" class="btn btn-primary btn-block">Record Payment & Update Balance</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Create New Admin (Owner Only) -->
+  <div class="modal-overlay" id="modal-admin">
+    <div class="modal-card">
+      <button type="button" class="modal-close-btn" data-close-modal>&times;</button>
+      <h3 style="font-size: 1.35rem; color: var(--color-primary-dark); margin-bottom: 0.5rem;">Add Administrator Account</h3>
+      <p style="font-size: 0.85rem; color: var(--color-slate-500); margin-bottom: 1.25rem;">
+        Creates a new admin using a secondary auth instance. Visible and allowed for owner only.
+      </p>
+
+      <form id="create-admin-form">
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label for="new-admin-name" class="form-label">Full Name *</label>
+          <input type="text" id="new-admin-name" class="form-control" required placeholder="e.g. John Mwangi">
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label for="new-admin-email" class="form-label">Staff Email Address *</label>
+          <input type="email" id="new-admin-email" class="form-control" required placeholder="staff@prelanjuniorschool.sc.ke">
+        </div>
+
+        <div class="form-grid form-grid-2" style="margin-bottom: 1.5rem;">
+          <div class="form-group">
+            <label for="new-admin-pass" class="form-label">Temporary Password *</label>
+            <input type="text" id="new-admin-pass" class="form-control" required value="PrelanAdmin2025#">
+          </div>
+          <div class="form-group">
+            <label for="new-admin-role" class="form-label">Role *</label>
+            <select id="new-admin-role" class="form-control" required>
+              <option value="admin">Administrator (Standard)</option>
+              <option value="owner">School Owner / Co-owner</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" id="create-admin-submit-btn" class="btn btn-primary btn-block">Create Admin Account</button>
+      </form>
+    </div>
+  </div>
+
+  <script type="module" src="/js/admin-dashboard.js"></script>
+</body>
+</html>

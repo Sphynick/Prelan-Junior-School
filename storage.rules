@@ -1,0 +1,31 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        firestore.exists(/databases/(default)/documents/admins/$(request.auth.uid));
+    }
+
+    // Public Gallery & News Images:
+    // Anyone can view. Only authenticated administrators can upload or delete.
+    match /images/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin()
+                   && request.resource.size < 5 * 1024 * 1024
+                   && request.resource.contentType.matches('image/.*');
+    }
+
+    // Official Documents, Circulars & Calendars:
+    // Anyone or authenticated parents can download. Only admins can upload.
+    match /documents/{allPaths=**} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin()
+                   && request.resource.size < 10 * 1024 * 1024;
+    }
+  }
+}
