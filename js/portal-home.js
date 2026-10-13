@@ -417,8 +417,7 @@ function initChangePassword() {
           showToast("Password updated successfully!", "success");
           close();
         } else {
-          showToast("Demo: Password updated successfully.", "success");
-          close();
+          showToast("You are not signed in. Please log in again.", "error");
         }
       } catch (err) {
         console.error("Password change error:", err);
