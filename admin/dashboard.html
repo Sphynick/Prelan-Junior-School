@@ -37,18 +37,6 @@
           <span class="sidebar-tab-icon">💰</span>
           <span>Fees & Paybill</span>
         </button>
-        <button type="button" class="sidebar-tab-btn" data-tab="tab-faqs-reviews">
-          <span class="sidebar-tab-icon">⭐</span>
-          <span>FAQs & Reviews</span>
-        </button>
-        <button type="button" class="sidebar-tab-btn" data-tab="tab-settings">
-          <span class="sidebar-tab-icon">⚙️</span>
-          <span>Site Settings</span>
-        </button>
-        <button type="button" class="sidebar-tab-btn" data-tab="tab-subscribers">
-          <span class="sidebar-tab-icon">✉️</span>
-          <span>Subscribers</span>
-        </button>
         <button type="button" class="sidebar-tab-btn" data-tab="tab-parents">
           <span class="sidebar-tab-icon">👨‍👩‍👦</span>
           <span>Parents & Learners</span>
@@ -93,13 +81,6 @@
       </header>
 
       <div class="dashboard-content">
-        <!-- Storage Plan Notice / Helper -->
-        <div id="storage-mode-banner" style="background: var(--color-mint); border: 1px solid var(--color-mint-border); padding: 0.75rem 1.25rem; border-radius: var(--radius-md); font-size: 0.85rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
-          <div>
-            <strong>Storage Mode:</strong> <span id="storage-mode-text">Spark Free Tier (Base64 compressed photos &lt;200KB)</span>.
-          </div>
-          <span style="font-size: 0.75rem; color: var(--color-slate-500);">Configured in <code>js/firebase-config.js</code></span>
-        </div>
 
         <!-- ==================================================================
              TAB 1: VISITS & APPLICATIONS
@@ -254,153 +235,6 @@
                   </tr>
                 </thead>
                 <tbody id="admin-fees-tbody">
-                  <!-- Rendered via JS -->
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
-        <!-- ==================================================================
-             TAB 5: FAQS & REVIEWS
-             ================================================================== -->
-        <section id="tab-faqs-reviews" class="tab-panel">
-          <!-- FAQs Management -->
-          <div class="panel-card" style="margin-bottom: 2rem;">
-            <div class="panel-header">
-              <h2 class="panel-title">Frequently Asked Questions</h2>
-              <button type="button" id="open-new-faq-btn" class="btn btn-sm btn-primary">+ Add FAQ Item</button>
-            </div>
-            <div class="table-responsive">
-              <table class="fees-table">
-                <thead>
-                  <tr>
-                    <th>Order</th>
-                    <th>Question</th>
-                    <th>Answer</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="faqs-table-body">
-                  <!-- Rendered via JS -->
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <!-- Reviews Approval -->
-          <div class="panel-card">
-            <div class="panel-header">
-              <h2 class="panel-title">Parent Reviews (Approval System)</h2>
-              <p style="font-size: 0.85rem; color: var(--color-slate-500);">
-                Public reviews are hidden until approved by an administrator.
-              </p>
-            </div>
-            <div class="table-responsive">
-              <table class="fees-table">
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Author</th>
-                    <th>Child Class</th>
-                    <th>Rating</th>
-                    <th>Review Content</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="reviews-table-body">
-                  <!-- Rendered via JS -->
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
-        <!-- ==================================================================
-             TAB 6: SITE SETTINGS
-             ================================================================== -->
-        <section id="tab-settings" class="tab-panel">
-          <div class="panel-card">
-            <div class="panel-header">
-              <h2 class="panel-title">School Contact & Website Settings</h2>
-              <button type="button" id="save-settings-btn" class="btn btn-primary">Save Settings</button>
-            </div>
-
-            <form id="site-settings-form">
-              <div class="form-grid form-grid-2" style="margin-bottom: 1.5rem;">
-                <div class="form-group">
-                  <label for="sett-phone" class="form-label">School Phone Number</label>
-                  <input type="text" id="sett-phone" name="phone" class="form-control" placeholder="+254 700 000 000">
-                </div>
-                <div class="form-group">
-                  <label for="sett-whatsapp" class="form-label">WhatsApp Admissions Phone</label>
-                  <input type="text" id="sett-whatsapp" name="whatsapp" class="form-control" placeholder="+254 700 000 000">
-                </div>
-                <div class="form-group">
-                  <label for="sett-email" class="form-label">Official Email</label>
-                  <input type="email" id="sett-email" name="email" class="form-control" placeholder="info@prelanjuniorschool.sc.ke">
-                </div>
-                <div class="form-group">
-                  <label for="sett-address" class="form-label">School Address / Location</label>
-                  <input type="text" id="sett-address" name="address" class="form-control" placeholder="Nyathuna, Ngecha, Kiambu County, Kenya">
-                </div>
-              </div>
-
-              <div class="form-group" style="margin-bottom: 1.5rem;">
-                <label for="sett-hours" class="form-label">Office Working Hours</label>
-                <input type="text" id="sett-hours" name="officeHours" class="form-control" placeholder="Mon – Fri: 7:30 AM – 4:30 PM | Sat: 8:30 AM – 12:30 PM">
-              </div>
-
-              <div style="border-top: 1px solid var(--color-slate-200); padding-top: 1.5rem; margin-top: 1.5rem;">
-                <h3 style="font-size: 1.15rem; color: var(--color-primary-dark); margin-bottom: 1rem;">Homepage Hero & Admission Banner</h3>
-
-                <div class="form-group" style="margin-bottom: 1rem;">
-                  <label for="sett-hero-title" class="form-label">Hero Main Headline</label>
-                  <input type="text" id="sett-hero-title" name="heroTitle" class="form-control" placeholder="Nurturing Every Learner's Potential Through CBC Excellence">
-                </div>
-
-                <div class="form-group" style="margin-bottom: 1rem;">
-                  <label for="sett-hero-sub" class="form-label">Hero Subtitle Paragraph</label>
-                  <textarea id="sett-hero-sub" name="heroSubtitle" class="form-control" rows="2"></textarea>
-                </div>
-
-                <div class="form-group" style="margin-bottom: 1rem;">
-                  <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-weight: 700;">
-                    <input type="checkbox" id="sett-banner-toggle" name="admissionBannerOpen">
-                    <span>Show "Admissions Open" Top Notification Banner</span>
-                  </label>
-                </div>
-
-                <div class="form-group">
-                  <label for="sett-banner-text" class="form-label">Admission Banner Announcement Text</label>
-                  <input type="text" id="sett-banner-text" name="admissionBannerText" class="form-control">
-                </div>
-              </div>
-            </form>
-          </div>
-        </section>
-
-        <!-- ==================================================================
-             TAB 7: NEWSLETTER SUBSCRIBERS
-             ================================================================== -->
-        <section id="tab-subscribers" class="tab-panel">
-          <div class="panel-card">
-            <div class="panel-header">
-              <h2 class="panel-title">Newsletter Subscribers</h2>
-              <button type="button" id="export-subs-csv-btn" class="btn btn-sm btn-outline">Export Emails (CSV)</button>
-            </div>
-
-            <div class="table-responsive">
-              <table class="fees-table">
-                <thead>
-                  <tr>
-                    <th>Date Subscribed</th>
-                    <th>Email Address</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="subscribers-table-body">
                   <!-- Rendered via JS -->
                 </tbody>
               </table>

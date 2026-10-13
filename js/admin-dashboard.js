@@ -81,8 +81,66 @@ document.addEventListener("DOMContentLoaded", () => {
   initInactivityTimer();
   initTabNavigation();
   initModals();
+  wireDashboardControls();
   checkAuthAndLoad();
 });
+
+/**
+ * Connects every button and form ONCE when the page loads.
+ * (Previously these were connected only after data loaded, so with an empty
+ * database the "+ Add" and upload buttons never worked.)
+ */
+function wireDashboardControls() {
+  initVisitsFilters();
+  initNewsForm();
+  initGalleryForm();
+  initCreateParentForm();
+  initRecordPaymentForm();
+  initCreateAdminForm();
+
+  const addParentBtn = document.getElementById("open-new-parent-btn");
+  if (addParentBtn) {
+    addParentBtn.onclick = () => {
+      const f = document.getElementById("create-parent-form");
+      if (f) f.reset();
+      openModal("modal-parent");
+    };
+  }
+
+  const recordBtn = document.getElementById("open-record-payment-btn");
+  if (recordBtn) {
+    recordBtn.onclick = () => {
+      const f = document.getElementById("record-payment-form");
+      if (f) f.reset();
+      const d = document.getElementById("pay-date");
+      if (d) d.valueAsDate = new Date();
+      openModal("modal-payment");
+    };
+  }
+
+  const exportPayBtn = document.getElementById("export-payments-csv-btn");
+  if (exportPayBtn) {
+    exportPayBtn.onclick = () => {
+      exportToCSV("prelan_fee_payments", allPayments, [
+        { key: "date", label: "Date" },
+        { key: "mpesaRef", label: "M-Pesa Reference" },
+        { key: "parentName", label: "Parent Name" },
+        { key: "term", label: "Term" },
+        { key: "amount", label: "Amount (KES)" },
+        { key: "notes", label: "Notes" }
+      ]);
+    };
+  }
+
+  const addAdminBtn = document.getElementById("open-new-admin-btn");
+  if (addAdminBtn) {
+    addAdminBtn.onclick = () => {
+      const f = document.getElementById("create-admin-form");
+      if (f) f.reset();
+      openModal("modal-admin");
+    };
+  }
+}
 
 async function checkAuthAndLoad() {
   // No demo mode: without a working Firebase connection, nobody gets in
@@ -147,12 +205,6 @@ function updateAdminUI(email, role) {
     ownerTabBtn.style.display = role === "owner" ? "flex" : "none";
   }
 
-  const storageBanner = document.getElementById("storage-mode-text");
-  if (storageBanner) {
-    storageBanner.textContent = USE_STORAGE
-      ? "Blaze Plan (Cloud Storage Bucket enabled)"
-      : "Spark Free Tier (Base64 compressed photos <200KB in Firestore)";
-  }
 }
 
 /* ==========================================================================
@@ -269,9 +321,6 @@ function loadAllDashboardData() {
   loadNews();
   loadGallery();
   loadFeesAndPaybill();
-  loadFAQsAndReviews();
-  loadSettings();
-  loadSubscribers();
   loadParentsAndLearners();
   loadPayments();
   if (currentAdminRole === "owner") {
@@ -306,7 +355,6 @@ async function loadVisits() {
 
   updateVisitsMetrics();
   renderVisitsTable(allVisits);
-  initVisitsFilters();
 }
 
 function updateVisitsMetrics() {
@@ -1362,12 +1410,8 @@ function initCreateParentForm() {
     }
 
     try {
-      let uid = "demo_parent_" + Date.now();
-
-      if (isConfigured) {
-        // SECONDARY APP INSTANCE PROVISIONING: Admin stays signed in!
-        uid = await createSecondaryAccount(email, tempPassword);
-      }
+      // SECONDARY APP INSTANCE PROVISIONING: Admin stays signed in!
+      const uid = await createSecondaryAccount(email, tempPassword);
 
       const parentData = {
         name,
@@ -1669,12 +1713,8 @@ function initCreateAdminForm() {
     }
 
     try {
-      let uid = "demo_admin_" + Date.now();
-
-      if (isConfigured) {
-        // SECONDARY APP PROVISIONING: Admin stays signed in!
-        uid = await createSecondaryAccount(email, tempPassword);
-      }
+      // SECONDARY APP PROVISIONING: Admin stays signed in!
+      const uid = await createSecondaryAccount(email, tempPassword);
 
       const adminData = {
         name,
