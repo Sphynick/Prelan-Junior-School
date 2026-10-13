@@ -85,17 +85,10 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 async function checkAuthAndLoad() {
-  // Demo Mode fallback check
+  // No demo mode: without a working Firebase connection, nobody gets in
+  localStorage.removeItem("prelan_admin_session");
   if (!isConfigured || !auth || !db) {
-    const demoSession = JSON.parse(localStorage.getItem("prelan_admin_session") || "null");
-    if (!demoSession) {
-      window.location.href = "/admin/login.html";
-      return;
-    }
-    currentUser = { uid: demoSession.uid, email: demoSession.email };
-    currentAdminRole = demoSession.role || "owner";
-    updateAdminUI(demoSession.email, currentAdminRole);
-    loadAllDashboardData();
+    window.location.href = "/admin/login.html";
     return;
   }
 

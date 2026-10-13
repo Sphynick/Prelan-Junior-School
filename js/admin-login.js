@@ -42,14 +42,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const forgotClose = document.getElementById("forgot-modal-close");
   const forgotForm = document.getElementById("forgot-password-form");
 
-  // Show config banner if placeholder
-  if (!isConfigured) {
-    showAlert(
-      `<strong>Note:</strong> Firebase credentials in <code>js/firebase-config.js</code> are currently set to placeholders. Once filled, real Firebase Auth will authenticate. For local testing, you can sign in with any email to preview the dashboard.`,
-      "info"
-    );
-  }
-
   // Check if already logged in
   if (auth && db) {
     onAuthStateChanged(auth, async (user) => {
@@ -82,20 +74,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
       setLoading(true);
 
-      // DEMO / UNCONFIGURED MODE FALLBACK
+      // Never allow a login unless Firebase is really connected
       if (!isConfigured || !auth || !db) {
-        // Set mock admin session for testing
-        localStorage.setItem("prelan_admin_session", JSON.stringify({
-          uid: "demo_admin_owner_01",
-          email: email,
-          role: "owner",
-          name: "School Owner / Principal",
-          loginTime: Date.now()
-        }));
-        showToast("Demo sign-in authorized.", "success");
-        setTimeout(() => {
-          window.location.href = "/admin/dashboard.html";
-        }, 500);
+        setLoading(false);
+        showAlert("Login is currently unavailable. Please contact the site administrator.", "error");
         return;
       }
 
@@ -173,8 +155,7 @@ document.addEventListener("DOMContentLoaded", () => {
       submitBtn.textContent = "Sending Link...";
 
       if (!isConfigured || !auth) {
-        showToast("Demo: Password reset email sent.", "info");
-        forgotModal.classList.remove("active");
+        showToast("Password reset is currently unavailable.", "error");
         submitBtn.disabled = false;
         submitBtn.textContent = "Send Reset Link";
         return;

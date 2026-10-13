@@ -67,18 +67,10 @@ function initPortalAuth() {
     });
   }
 
-  // DEMO MODE CHECK
+  // No demo mode: without a working Firebase connection, nobody gets in
+  localStorage.removeItem("prelan_parent_session");
   if (!isConfigured || !auth || !db) {
-    const demoSession = JSON.parse(localStorage.getItem("prelan_parent_session") || "null");
-    if (!demoSession) {
-      window.location.href = "/portal/login.html";
-      return;
-    }
-    currentParentUser = { uid: demoSession.uid, email: demoSession.email };
-    currentParentData = demoSession;
-    renderPortalUI(currentParentData);
-    loadPortalPayments(currentParentUser.uid);
-    loadAnnouncementsAndDocs();
+    window.location.href = "/portal/login.html";
     return;
   }
 

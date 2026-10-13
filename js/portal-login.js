@@ -42,13 +42,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const forgotClose = document.getElementById("portal-forgot-close");
   const forgotForm = document.getElementById("portal-forgot-form");
 
-  if (!isConfigured) {
-    showAlert(
-      `<strong>Note:</strong> Firebase credentials in <code>js/firebase-config.js</code> are currently set to placeholders. For local review, you can enter any email to preview the parent portal.`,
-      "info"
-    );
-  }
-
   // Check existing session
   if (auth && db) {
     onAuthStateChanged(auth, async (user) => {
@@ -81,22 +74,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
       setLoading(true);
 
-      // DEMO / UNCONFIGURED FALLBACK
+      // Never allow a login unless Firebase is really connected
       if (!isConfigured || !auth || !db) {
-        localStorage.setItem("prelan_parent_session", JSON.stringify({
-          uid: "demo_parent_01",
-          email: email,
-          name: "Mary Wanjiku",
-          phone: "+254 712 345 678",
-          balance: 12500,
-          learners: [
-            { name: "Brian Kamau", grade: "Grade 2", admNo: "PJS/2024/045" }
-          ]
-        }));
-        showToast("Demo sign-in authorized.", "success");
-        setTimeout(() => {
-          window.location.href = "/portal/home.html";
-        }, 500);
+        setLoading(false);
+        showAlert("Login is currently unavailable. Please contact the school office.", "error");
         return;
       }
 
@@ -160,8 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
       submitBtn.textContent = "Sending...";
 
       if (!isConfigured || !auth) {
-        showToast("Demo: Reset email sent.", "info");
-        forgotModal.classList.remove("active");
+        showToast("Password reset is currently unavailable.", "error");
         submitBtn.disabled = false;
         submitBtn.textContent = "Send Password Reset Link";
         return;
