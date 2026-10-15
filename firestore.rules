@@ -22,9 +22,11 @@ service cloud.firestore {
     }
 
     // 1. Admins Collection:
-    // Only administrators can read. Only an admin with role == 'owner' can create, update, or delete admins.
+    // Admins can read all admin records. Any signed-in user can read ONLY their own record
+    // (needed so the login page can check whether they are an admin).
+    // Only an admin with role == 'owner' can create, update, or delete admins.
     match /admins/{adminId} {
-      allow read: if isAdmin();
+      allow read: if isAdmin() || (isAuthenticated() && request.auth.uid == adminId);
       allow write: if isOwner();
     }
 
@@ -54,6 +56,42 @@ service cloud.firestore {
                     && (request.resource.data.status in ['New', 'Contacted', 'Visited', 'Enrolled'])
                     && (!('email' in request.resource.data) || request.resource.data.email is string)
                     && (!('message' in request.resource.data) || request.resource.data.message.size() <= 1000);
+    }
+
+    // 3b. Admission Applications Collection:
+    // Public may CREATE an application (online form) with valid fields.
+    // Public cannot read, update or delete. Admins have full access
+    // (including adding applications manually from the dashboard).
+    match /applications/{appId} {
+      allow read, update, delete: if isAdmin();
+      allow create: if isAdmin()
+                    || (request.resource.data.keys().size() <= 70
+                        && request.resource.data.source == 'online'
+                        && request.resource.data.status == 'New'
+                        && request.resource.data.consent == true
+                        && request.resource.data.childFirst is string
+                        && request.resource.data.childFirst.size() > 0
+                        && request.resource.data.childFirst.size() <= 60
+                        && request.resource.data.childSecond is string
+                        && request.resource.data.childSecond.size() > 0
+                        && request.resource.data.childSecond.size() <= 60
+                        && request.resource.data.parentFirst is string
+                        && request.resource.data.parentFirst.size() > 0
+                        && request.resource.data.parentFirst.size() <= 60
+                        && request.resource.data.parentSecond is string
+                        && request.resource.data.parentSecond.size() > 0
+                        && request.resource.data.parentSecond.size() <= 60
+                        && request.resource.data.phone is string
+                        && request.resource.data.phone.size() > 5
+                        && request.resource.data.phone.size() <= 30
+                        && request.resource.data.grade is string
+                        && request.resource.data.grade.size() <= 50
+                        && request.resource.data.reference is string
+                        && request.resource.data.reference.size() <= 30
+                        && (!('medical' in request.resource.data) || request.resource.data.medical.size() <= 1000)
+                        && (!('specialNeeds' in request.resource.data) || request.resource.data.specialNeeds.size() <= 1000)
+                        && (!('address' in request.resource.data) || request.resource.data.address.size() <= 300)
+                        && (!('reasonLeaving' in request.resource.data) || request.resource.data.reasonLeaving.size() <= 500));
     }
 
     // 4. Newsletter Subscribers Collection:

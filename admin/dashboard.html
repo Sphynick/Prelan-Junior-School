@@ -7,6 +7,25 @@
   <link rel="stylesheet" href="/css/styles.css">
   <link rel="icon" type="image/svg+xml" href="/assets/images/prelan_logo.svg">
   <link rel="alternate icon" href="/favicon.svg">
+<style>
+  .app-section { padding-bottom: 1rem; margin-bottom: 1rem; border-bottom: 1px solid var(--color-slate-200); }
+  .app-section-title { display: flex; align-items: center; gap: 0.6rem; font-size: 1.05rem; color: var(--color-primary-dark); margin: 0 0 0.75rem; }
+  .app-num { width: 24px; height: 24px; border-radius: 50%; background: var(--color-primary); color: #fff; font-size: 0.8rem; display: inline-flex; align-items: center; justify-content: center; }
+  .app-section-body { display: grid; gap: 0.85rem; }
+  .name-fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+  .name-fieldset legend { padding: 0; margin-bottom: 0.35rem; font-weight: 600; font-size: 0.9rem; }
+  .name-row { display: grid; gap: 0.6rem; grid-template-columns: repeat(3, 1fr); }
+  .check-grid { display: grid; gap: 0.5rem; grid-template-columns: 1fr 1fr; }
+  .check-inline { display: flex; gap: 0.5rem; align-items: flex-start; font-size: 0.92rem; }
+  .form-control.error { border-color: var(--color-danger); }
+  .ad-sec { margin-bottom: 1rem; }
+  .ad-sec h4 { margin: 0 0 0.4rem; font-size: 0.95rem; color: var(--color-primary-dark); border-bottom: 1px solid var(--color-mint-border); padding-bottom: 0.25rem; }
+  .ad-grid { display: grid; gap: 0.4rem 1rem; grid-template-columns: 1fr 1fr; }
+  .ad-label { display: block; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-slate-500); }
+  .ad-value { display: block; font-weight: 500; word-break: break-word; }
+  .ad-head { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; background: var(--color-mint-subtle); border: 1px solid var(--color-mint-border); border-radius: var(--radius-md); padding: 0.75rem 1rem; margin-bottom: 1rem; font-size: 0.9rem; }
+  @media (max-width: 640px) { .name-row, .check-grid, .ad-grid { grid-template-columns: 1fr; } }
+</style>
 </head>
 <body>
   <div class="dashboard-shell">
@@ -23,7 +42,11 @@
       <nav class="sidebar-nav" aria-label="Dashboard Tabs">
         <button type="button" class="sidebar-tab-btn active" data-tab="tab-visits">
           <span class="sidebar-tab-icon">📋</span>
-          <span>Visits & Applications</span>
+          <span>Visit Requests</span>
+        </button>
+        <button type="button" class="sidebar-tab-btn" data-tab="tab-applications">
+          <span class="sidebar-tab-icon">🎓</span>
+          <span>Admission Applications</span>
         </button>
         <button type="button" class="sidebar-tab-btn" data-tab="tab-news">
           <span class="sidebar-tab-icon">📰</span>
@@ -69,7 +92,7 @@
       <header class="dashboard-topbar">
         <div style="display: flex; align-items: center; gap: 1rem;">
           <button type="button" id="sidebar-toggle-btn" class="mobile-toggle" aria-label="Toggle Sidebar">☰</button>
-          <h1 style="font-size: 1.4rem; color: var(--color-primary-dark);" id="dashboard-page-title">Visits & Applications</h1>
+          <h1 style="font-size: 1.4rem; color: var(--color-primary-dark);" id="dashboard-page-title">Visit Requests</h1>
         </div>
 
         <div style="display: flex; align-items: center; gap: 1.25rem;">
@@ -108,7 +131,7 @@
 
           <div class="panel-card">
             <div class="panel-header">
-              <h2 class="panel-title">Visit Requests & Admission Applications</h2>
+              <h2 class="panel-title">School Visit Requests</h2>
               <div class="table-toolbar">
                 <input type="search" id="visits-search-input" class="search-input" placeholder="Search parent, child, phone...">
                 <select id="visits-status-filter" class="search-input">
@@ -138,6 +161,50 @@
                 </thead>
                 <tbody id="visits-table-body">
                   <tr><td colspan="8" style="text-align: center; color: var(--color-slate-500); padding: 2rem;">Loading visit requests...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================================================================
+             ADMISSION APPLICATIONS (detailed online / office registrations)
+             ================================================================== -->
+        <section id="tab-applications" class="tab-panel">
+          <div class="stats-row">
+            <div class="metric-card"><div class="metric-label">Total Applications</div><div class="metric-number" id="metric-apps-total">0</div></div>
+            <div class="metric-card"><div class="metric-label">New</div><div class="metric-number" id="metric-apps-new" style="color: var(--color-warning);">0</div></div>
+            <div class="metric-card"><div class="metric-label">In Review / Assessment</div><div class="metric-number" id="metric-apps-review" style="color: #0284c7;">0</div></div>
+            <div class="metric-card"><div class="metric-label">Accepted / Enrolled</div><div class="metric-number" id="metric-apps-accepted" style="color: var(--color-success);">0</div></div>
+          </div>
+
+          <div class="panel-card">
+            <div class="panel-header">
+              <div>
+                <h2 class="panel-title">Admission Applications</h2>
+                <p style="font-size: 0.85rem; color: var(--color-slate-500);">Filled in online by parents, or entered here by the school office.</p>
+              </div>
+              <div class="table-toolbar">
+                <input type="search" id="apps-search-input" class="search-input" placeholder="Search learner, parent, phone, ref...">
+                <select id="apps-status-filter" class="search-input">
+                  <option value="all">All Statuses</option>
+                  <option value="New">New</option>
+                  <option value="Under Review">Under Review</option>
+                  <option value="Assessment Scheduled">Assessment Scheduled</option>
+                  <option value="Accepted">Accepted</option>
+                  <option value="Waitlisted">Waitlisted</option>
+                  <option value="Enrolled">Enrolled</option>
+                  <option value="Declined">Declined</option>
+                </select>
+                <button type="button" id="export-apps-csv-btn" class="btn btn-sm btn-outline">Export CSV</button>
+                <button type="button" id="open-new-application-btn" class="btn btn-sm btn-primary">+ Add Application</button>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="fees-table">
+                <thead><tr><th>Ref</th><th>Date</th><th>Learner</th><th>Grade</th><th>Parent</th><th>Phone</th><th>Source</th><th>Status</th><th>Actions</th></tr></thead>
+                <tbody id="apps-table-body">
+                  <tr><td colspan="9" style="text-align: center; color: var(--color-slate-500); padding: 2rem;">Loading applications...</td></tr>
                 </tbody>
               </table>
             </div>
@@ -382,6 +449,64 @@
           <button type="submit" class="btn btn-primary btn-block">Save Status & Notes</button>
           <button type="button" id="delete-visit-btn" class="btn btn-outline" style="border-color: var(--color-danger); color: var(--color-danger);">Delete</button>
         </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Review an application -->
+  <div class="modal-overlay" id="modal-application-details">
+    <div class="modal-card" style="max-width: 860px;">
+      <button type="button" class="modal-close-btn" data-close-modal>&times;</button>
+      <h3 style="font-size: 1.35rem; color: var(--color-primary-dark); margin-bottom: 0.5rem;">Application Details</h3>
+      <div id="application-detail-content" style="margin-bottom: 1.25rem;"></div>
+      <form id="application-status-form">
+        <div class="form-grid form-grid-2" style="margin-bottom: 1rem;">
+          <div class="form-group">
+            <label for="application-detail-status" class="form-label">Application Status</label>
+            <select id="application-detail-status" class="form-control"></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Quick actions</label>
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button type="button" id="print-application-btn" class="btn btn-sm btn-outline">Print form</button>
+              <button type="button" id="application-to-parent-btn" class="btn btn-sm btn-outline">Create parent account</button>
+            </div>
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 1.25rem;">
+          <label for="application-detail-notes" class="form-label">Internal Staff Notes</label>
+          <textarea id="application-detail-notes" class="form-control" rows="3" placeholder="Assessment booked for Monday 9am, fees discussed..."></textarea>
+        </div>
+        <div style="display: flex; gap: 0.75rem;">
+          <button type="submit" class="btn btn-primary btn-block">Save Status & Notes</button>
+          <button type="button" id="delete-application-btn" class="btn btn-outline" style="border-color: var(--color-danger); color: var(--color-danger);">Delete</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Add an application manually (office entry) -->
+  <div class="modal-overlay" id="modal-application-new">
+    <div class="modal-card" style="max-width: 860px;">
+      <button type="button" class="modal-close-btn" data-close-modal>&times;</button>
+      <h3 style="font-size: 1.35rem; color: var(--color-primary-dark); margin-bottom: 0.25rem;">Add Application (office entry)</h3>
+      <p style="font-size: 0.85rem; color: var(--color-slate-500); margin-bottom: 1.25rem;">
+        Use this when a parent fills in a paper form or applies in person. Only learner, grade, parent name and phone are required; add whatever else you have.
+      </p>
+      <form id="application-new-form" novalidate>
+        <div id="application-new-fields"></div>
+        <div class="form-grid form-grid-2" style="margin: 1rem 0;">
+          <div class="form-group">
+            <label for="na-status" class="form-label">Status</label>
+            <select id="na-status" class="form-control"></select>
+          </div>
+          <div class="form-group">
+            <label for="na-notes" class="form-label">Internal notes</label>
+            <input type="text" id="na-notes" class="form-control" placeholder="Optional">
+          </div>
+        </div>
+        <div id="application-new-alert" style="display: none; padding: 0.75rem; border-radius: var(--radius-md); font-size: 0.9rem; margin-bottom: 1rem; background: var(--color-danger-light); color: var(--color-danger);"></div>
+        <button type="submit" id="application-new-submit-btn" class="btn btn-primary btn-block">Save Application</button>
       </form>
     </div>
   </div>

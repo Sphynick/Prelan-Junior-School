@@ -34,7 +34,12 @@ import {
   showToast,
   escapeHtml,
   compressImageToBase64,
-  exportToCSV
+  exportToCSV,
+  collectApplication,
+  generateReference,
+  renderApplicationForm,
+  APPLICATION_STATUSES,
+  APPLICATION_DETAIL
 } from "./utils.js";
 
 // Main Firebase instances
@@ -97,6 +102,7 @@ function wireDashboardControls() {
   initCreateParentForm();
   initRecordPaymentForm();
   initCreateAdminForm();
+  initApplicationControls();
 
   const addParentBtn = document.getElementById("open-new-parent-btn");
   if (addParentBtn) {
@@ -318,6 +324,7 @@ function closeModal(id) {
    ========================================================================== */
 function loadAllDashboardData() {
   loadVisits();
+  loadApplications();
   loadNews();
   loadGallery();
   loadFeesAndPaybill();
@@ -532,6 +539,284 @@ function openVisitDetail(visit) {
   };
 
   openModal("modal-visit-details");
+}
+
+
+/* ==========================================================================
+   1b. ADMISSION APPLICATIONS (online + office entry)
+   ========================================================================== */
+let allApplications = [];
+
+const APP_BADGE = {
+  "New": "badge-new",
+  "Under Review": "badge-contacted",
+  "Assessment Scheduled": "badge-visited",
+  "Accepted": "badge-enrolled",
+  "Waitlisted": "badge-contacted",
+  "Enrolled": "badge-enrolled",
+  "Declined": "badge-pending"
+};
+
+async function loadApplications() {
+  const tbody = document.getElementById("apps-table-body");
+  if (!tbody) return;
+
+  if (db) {
+    try {
+      const q = query(collection(db, "applications"), orderBy("createdAt", "desc"));
+      const snap = await getDocs(q);
+      allApplications = [];
+      snap.forEach(d => allApplications.push({ id: d.id, ...d.data() }));
+    } catch (e) {
+      console.warn("Applications fetch error:", e.message);
+      allApplications = [];
+      tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;color:var(--color-danger);padding:2rem;">Could not load applications (${escapeHtml(e.code || e.message)}). Check that the Firestore rules include the "applications" collection.</td></tr>`;
+      updateApplicationsMetrics();
+      return;
+    }
+  }
+  updateApplicationsMetrics();
+  applyApplicationsFilter();
+}
+
+function updateApplicationsMetrics() {
+  const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+  const count = (...st) => allApplications.filter(a => st.includes(a.status || "New")).length;
+  set("metric-apps-total", allApplications.length);
+  set("metric-apps-new", count("New"));
+  set("metric-apps-review", count("Under Review", "Assessment Scheduled"));
+  set("metric-apps-accepted", count("Accepted", "Enrolled"));
+}
+
+function renderApplicationsTable(items) {
+  const tbody = document.getElementById("apps-table-body");
+  if (!tbody) return;
+  tbody.innerHTML = "";
+  if (items.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;color:var(--color-slate-500);padding:2rem;">No applications found.</td></tr>`;
+    return;
+  }
+  items.forEach(app => {
+    const tr = document.createElement("tr");
+    const status = app.status || "New";
+    tr.innerHTML = `
+      <td style="font-family:monospace;font-size:0.85rem;">${escapeHtml(app.reference || "—")}</td>
+      <td>${formatDate(app.createdAt)}</td>
+      <td><strong>${escapeHtml(app.childName || "—")}</strong></td>
+      <td><span class="badge" style="background: var(--color-mint); color: var(--color-primary);">${escapeHtml(app.grade || "—")}</span></td>
+      <td>${escapeHtml(app.parentName || "—")}</td>
+      <td><a href="tel:${escapeHtml(app.phone || "")}" style="color: var(--color-primary); font-weight: 600;">${escapeHtml(app.phone || "—")}</a></td>
+      <td>${app.source === "office" ? "Office" : "Online"}</td>
+      <td><span class="badge ${APP_BADGE[status] || "badge-new"}">${escapeHtml(status)}</span></td>
+      <td><button type="button" class="btn btn-sm btn-outline">Review</button></td>
+    `;
+    tr.querySelector("button").addEventListener("click", () => openApplicationDetail(app));
+    tbody.appendChild(tr);
+  });
+}
+
+function applyApplicationsFilter() {
+  const term = (document.getElementById("apps-search-input")?.value || "").toLowerCase();
+  const status = document.getElementById("apps-status-filter")?.value || "all";
+  const filtered = allApplications.filter(a => {
+    const hay = [a.reference, a.childName, a.parentName, a.phone, a.email, a.grade].join(" ").toLowerCase();
+    return (!term || hay.includes(term)) && (status === "all" || (a.status || "New") === status);
+  });
+  renderApplicationsTable(filtered);
+}
+
+function fillStatusSelect(select, current) {
+  if (!select) return;
+  select.innerHTML = APPLICATION_STATUSES.map(s => `<option value="${s}">${s}</option>`).join("");
+  select.value = current || "New";
+}
+
+function applicationDetailHtml(app) {
+  const sections = APPLICATION_DETAIL.map(sec => {
+    const rows = sec.items.filter(([, k]) => app[k]).map(([label, k]) =>
+      `<div><span class="ad-label">${escapeHtml(label)}</span><span class="ad-value">${escapeHtml(app[k])}</span></div>`).join("");
+    return rows ? `<div class="ad-sec"><h4>${escapeHtml(sec.title)}</h4><div class="ad-grid">${rows}</div></div>` : "";
+  }).join("");
+  const docs = (app.documents && app.documents.length)
+    ? `<div class="ad-sec"><h4>Documents</h4><div class="ad-value">${app.documents.map(escapeHtml).join(" &bull; ")}</div></div>` : "";
+  return `
+    <div class="ad-head">
+      <div><strong>Ref:</strong> ${escapeHtml(app.reference || "—")}</div>
+      <div><strong>Submitted:</strong> ${formatDate(app.createdAt)}</div>
+      <div><strong>Source:</strong> ${app.source === "office" ? "Entered by office" : "Online application"}</div>
+    </div>${sections}${docs}`;
+}
+
+function printApplication(app) {
+  const w = window.open("", "_blank");
+  if (!w) { showToast("Please allow pop-ups to print.", "error"); return; }
+  w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>Application ${escapeHtml(app.reference || "")}</title>
+    <style>
+      body{font-family:Arial,sans-serif;margin:28px;color:#111}
+      h1{font-size:20px;margin:0 0 4px} h2{font-size:14px;margin:0 0 14px;color:#555;font-weight:normal}
+      .ad-head{display:flex;gap:24px;flex-wrap:wrap;border:1px solid #999;padding:8px 12px;margin-bottom:14px;font-size:13px}
+      .ad-sec{margin-bottom:14px;break-inside:avoid} .ad-sec h4{margin:0 0 6px;font-size:14px;border-bottom:1px solid #999;padding-bottom:3px}
+      .ad-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 24px} .ad-label{display:block;font-size:10px;text-transform:uppercase;color:#666} .ad-value{font-size:13px}
+      .sign{margin-top:36px;display:flex;gap:40px;font-size:13px} .sign div{flex:1;border-top:1px solid #000;padding-top:4px}
+    </style></head><body>
+    <h1>PRELAN JUNIOR SCHOOL</h1><h2>Admission application form</h2>
+    ${applicationDetailHtml(app)}
+    <p style="font-size:13px"><strong>Status:</strong> ${escapeHtml(app.status || "New")} ${app.notes ? " &mdash; " + escapeHtml(app.notes) : ""}</p>
+    <div class="sign"><div>Parent / guardian signature &amp; date</div><div>School office signature &amp; date</div></div>
+    </body></html>`);
+  w.document.close();
+  w.focus();
+  setTimeout(() => w.print(), 300);
+}
+
+function openApplicationDetail(app) {
+  const content = document.getElementById("application-detail-content");
+  const statusSelect = document.getElementById("application-detail-status");
+  const notes = document.getElementById("application-detail-notes");
+  const form = document.getElementById("application-status-form");
+  if (!content || !form) return;
+
+  content.innerHTML = applicationDetailHtml(app);
+  fillStatusSelect(statusSelect, app.status);
+  notes.value = app.notes || "";
+
+  form.onsubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await updateDoc(doc(db, "applications", app.id), {
+        status: statusSelect.value,
+        notes: notes.value.trim(),
+        updatedAt: serverTimestamp()
+      });
+      showToast("Application updated.", "success");
+      closeModal("modal-application-details");
+      loadApplications();
+    } catch (err) {
+      console.error(err);
+      showToast("Error updating application.", "error");
+    }
+  };
+
+  document.getElementById("print-application-btn").onclick = () => printApplication({ ...app, status: statusSelect.value, notes: notes.value.trim() });
+
+  document.getElementById("application-to-parent-btn").onclick = () => {
+    closeModal("modal-application-details");
+    const tabBtn = document.querySelector('.sidebar-tab-btn[data-tab="tab-parents"]');
+    if (tabBtn) tabBtn.click();
+    const set = (id, v) => { const el = document.getElementById(id); if (el) el.value = v || ""; };
+    set("parent-name", app.parentName);
+    set("parent-phone", app.phone);
+    set("parent-email", app.email);
+    set("learner-name", app.childName);
+    set("learner-grade", app.grade);
+    openModal("modal-parent");
+  };
+
+  document.getElementById("delete-application-btn").onclick = async () => {
+    if (!confirm(`Delete the application for ${app.childName || "this learner"}? This cannot be undone.`)) return;
+    try {
+      await deleteDoc(doc(db, "applications", app.id));
+      showToast("Application deleted.", "info");
+      closeModal("modal-application-details");
+      loadApplications();
+    } catch (err) {
+      showToast("Error deleting application.", "error");
+    }
+  };
+
+  openModal("modal-application-details");
+}
+
+function initApplicationControls() {
+  document.getElementById("apps-search-input")?.addEventListener("input", applyApplicationsFilter);
+  document.getElementById("apps-status-filter")?.addEventListener("change", applyApplicationsFilter);
+
+  const exportBtn = document.getElementById("export-apps-csv-btn");
+  if (exportBtn) {
+    exportBtn.onclick = () => {
+      const rows = allApplications.map(a => ({ ...a, createdAtText: formatDate(a.createdAt), documentsText: (a.documents || []).join("; ") }));
+      exportToCSV("prelan_admission_applications", rows, [
+        { key: "reference", label: "Reference" },
+        { key: "createdAtText", label: "Date" },
+        { key: "status", label: "Status" },
+        { key: "source", label: "Source" },
+        { key: "childName", label: "Learner" },
+        { key: "dob", label: "Date of Birth" },
+        { key: "gender", label: "Gender" },
+        { key: "birthCertNo", label: "Birth Cert No" },
+        { key: "grade", label: "Grade" },
+        { key: "intake", label: "Intake" },
+        { key: "previousSchool", label: "Previous School" },
+        { key: "residence", label: "Home Area" },
+        { key: "transport", label: "Transport" },
+        { key: "medical", label: "Medical" },
+        { key: "specialNeeds", label: "Learning Needs" },
+        { key: "parentName", label: "Parent" },
+        { key: "relationship", label: "Relationship" },
+        { key: "parentId", label: "Parent ID" },
+        { key: "phone", label: "Phone" },
+        { key: "altPhone", label: "Alt Phone" },
+        { key: "email", label: "Email" },
+        { key: "emergencyName", label: "Emergency Contact" },
+        { key: "emergencyPhone", label: "Emergency Phone" },
+        { key: "documentsText", label: "Documents" },
+        { key: "notes", label: "Notes" }
+      ]);
+    };
+  }
+
+  const openBtn = document.getElementById("open-new-application-btn");
+  const fields = document.getElementById("application-new-fields");
+  const form = document.getElementById("application-new-form");
+  if (openBtn && fields && form) {
+    renderApplicationForm(fields, { office: true, idPrefix: "na" });
+    fillStatusSelect(document.getElementById("na-status"), "New");
+
+    openBtn.onclick = () => {
+      form.reset();
+      renderApplicationForm(fields, { office: true, idPrefix: "na" });
+      fillStatusSelect(document.getElementById("na-status"), "New");
+      const alertBox = document.getElementById("application-new-alert");
+      if (alertBox) alertBox.style.display = "none";
+      openModal("modal-application-new");
+    };
+
+    form.onsubmit = async (e) => {
+      e.preventDefault();
+      const alertBox = document.getElementById("application-new-alert");
+      const submitBtn = document.getElementById("application-new-submit-btn");
+      form.querySelectorAll(".error").forEach(el => el.classList.remove("error"));
+      if (alertBox) alertBox.style.display = "none";
+
+      const result = collectApplication(form, { office: true });
+      if (!result.ok) {
+        if (alertBox) { alertBox.textContent = result.message; alertBox.style.display = "block"; }
+        const el = form.elements[result.field];
+        if (el) { el.classList.add("error"); el.focus(); }
+        return;
+      }
+
+      submitBtn.disabled = true;
+      try {
+        await addDoc(collection(db, "applications"), {
+          ...result.data,
+          reference: generateReference(),
+          source: "office",
+          status: document.getElementById("na-status").value,
+          notes: document.getElementById("na-notes").value.trim(),
+          createdAt: serverTimestamp ? serverTimestamp() : new Date()
+        });
+        showToast("Application saved.", "success");
+        closeModal("modal-application-new");
+        loadApplications();
+      } catch (err) {
+        console.error(err);
+        if (alertBox) { alertBox.textContent = "Could not save the application: " + (err.message || err); alertBox.style.display = "block"; }
+      } finally {
+        submitBtn.disabled = false;
+      }
+    };
+  }
 }
 
 /* ==========================================================================

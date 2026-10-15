@@ -9,23 +9,11 @@
       "firestore.rules",
       "storage.rules",
       "package.json",
-      "package-lock.json",
-      "tsconfig.json",
-      "vite.config.ts"
+      "package-lock.json"
     ],
     "cleanUrls": true,
-    "trailingSlash": false,
-    "rewrites": [
-      {
-        "source": "/(about|pillars|benefits|reviews|programmes|programmes/**|admissions|fees|gallery|news|contact|visit|faq|main)",
-        "destination": "/index.html"
-      }
-    ]
+    "trailingSlash": false
   },
-  "firestore": {
-    "rules": "firestore.rules"
-  },
-  "storage": {
-    "rules": "storage.rules"
-  }
+  "firestore": { "rules": "firestore.rules" },
+  "storage": { "rules": "storage.rules" }
 }

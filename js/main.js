@@ -27,6 +27,9 @@ import {
   escapeHtml,
   formatKES,
   formatDate
+  ,collectApplication,
+  generateReference,
+  renderApplicationForm
 } from "./utils.js";
 
 // Initialize Firebase if configured
@@ -68,34 +71,34 @@ const FALLBACK_FEES = [
 
 const FALLBACK_GALLERY = [
   {
-    title: "School Gate & Serene Campus Grounds",
+    title: "Sports Field & Campus Grounds",
     category: "Grounds",
-    imageUrl: "/assets/images/hero_school_campus_1791521547584.jpg"
+    imageUrl: "/assets/images/sports-1200.jpg"
   },
   {
     title: "Learner-Centered CBC Classroom",
     category: "Classrooms",
-    imageUrl: "/assets/images/classroom_cbc_learners_1791521560397.jpg"
+    imageUrl: "/assets/images/classroom-1200.jpg"
   },
   {
     title: "4-K Junior Agricultural Science Project",
     category: "Clubs",
-    imageUrl: "/assets/images/school_gardening_club_1791521582868.jpg"
+    imageUrl: "/assets/images/gardening-1200.jpg"
   },
   {
     title: "Annual Sports & Athletics Field Day",
     category: "Events",
-    imageUrl: "/assets/images/school_sports_ground_1791521571400.jpg"
+    imageUrl: "/assets/images/sports-1200.jpg"
   },
   {
-    title: "Scenic School Compound & Paths",
+    title: "School Garden & Compound",
     category: "Grounds",
-    imageUrl: "/assets/images/hero_school_campus_1791521547584.jpg"
+    imageUrl: "/assets/images/gardening-1200.jpg"
   },
   {
     title: "Hands-on Practical CBC Modeling",
     category: "Classrooms",
-    imageUrl: "/assets/images/classroom_cbc_learners_1791521560397.jpg"
+    imageUrl: "/assets/images/classroom-1200.jpg"
   }
 ];
 
@@ -148,19 +151,19 @@ const FALLBACK_NEWS = [
     title: "Term Admissions Ongoing: Join the Prelan Family",
     date: "Current Term",
     summary: "Enrolment is now open for Pre-Primary (PP1-PP2) and Primary Grades 1 to 6. Schedule your on-site campus tour today.",
-    imageUrl: "/assets/images/classroom_cbc_learners_1791521560397.jpg"
+    imageUrl: "/assets/images/classroom-1200.jpg"
   },
   {
     title: "Junior Environmental & 4-K Club Tree Planting Day",
     date: "Recent Event",
     summary: "Our learners participated in an exciting environmental conservation project cultivating indigenous tree seedlings within our campus gardens.",
-    imageUrl: "/assets/images/school_gardening_club_1791521582868.jpg"
+    imageUrl: "/assets/images/gardening-1200.jpg"
   },
   {
     title: "Upcoming Academic Clinic & Parent Consultation",
     date: "Term Calendar",
     summary: "Parents and guardians are warmly invited to discuss individual learner assessment progress with class educators.",
-    imageUrl: "/assets/images/hero_school_campus_1791521547584.jpg"
+    imageUrl: "/assets/images/sports-1200.jpg"
   }
 ];
 
@@ -169,7 +172,7 @@ const FALLBACK_NEWS = [
    ========================================================================== */
 document.addEventListener("DOMContentLoaded", () => {
   initYear();
-  initNavigationRouter();
+  initHeader();
   initMobileNav();
   initLightbox();
   loadSiteSettings();
@@ -179,105 +182,40 @@ document.addEventListener("DOMContentLoaded", () => {
   loadFAQs();
   loadNews();
   initVisitForm();
+  initApplyForm();
   initNewsletterForm();
   initReviewModal();
 });
 
 /**
- * Clean URL Router & Smooth Navigation without "#" in paths
+ * Header behaviour: shadow on scroll + highlight the current page in the menus.
+ * (The old single-page router was removed: every link now opens its own page.)
  */
-function initNavigationRouter() {
-  const routeMap = {
-    "/": null,
-    "/about": "about",
-    "/pillars": "pillars",
-    "/benefits": "benefits",
-    "/reviews": "reviews",
-    "/programmes": "programmes",
-    "/programmes/pre-primary": "prog-preprimary",
-    "/programmes/lower-primary": "prog-lower",
-    "/programmes/upper-primary": "prog-upper",
-    "/admissions": "admissions",
-    "/fees": "fees",
-    "/gallery": "gallery",
-    "/news": "news",
-    "/contact": "contact",
-    "/visit": "visit-section",
-    "/faq": "faq",
-    "/main": "main-content"
-  };
-
-  function scrollToSection(targetId, updateHistory = true, newPath = null) {
-    if (!targetId) {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      if (updateHistory) {
-        try {
-          window.history.pushState({ section: null }, "", "/");
-        } catch (e) {}
-      }
-      return;
-    }
-
-    const targetEl = document.getElementById(targetId);
-    if (targetEl) {
-      const header = document.querySelector(".site-header");
-      const headerOffset = header ? header.offsetHeight + 12 : 80;
-      const elementPosition = targetEl.getBoundingClientRect().top + window.pageYOffset;
-      const offsetPosition = Math.max(0, elementPosition - headerOffset);
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth"
-      });
-
-      if (updateHistory && newPath) {
-        try {
-          window.history.pushState({ section: targetId }, "", newPath);
-        } catch (e) {}
-      }
-    }
+function initHeader() {
+  const header = document.getElementById("site-header");
+  if (header) {
+    const onScroll = () => header.classList.toggle("is-scrolled", window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
   }
 
-  // Intercept clicks on links with data-nav-target or clean path hrefs
-  document.addEventListener("click", (e) => {
-    const link = e.target.closest("a");
-    if (!link) return;
+  const norm = (p) => (p || "/").split("#")[0].split("?")[0].replace(/\.html$/, "").replace(/\/$/, "") || "/";
+  const here = norm(window.location.pathname);
 
-    const navTarget = link.getAttribute("data-nav-target");
-    const href = link.getAttribute("href");
-
-    // Skip external links or portal/admin links
-    if (href && (href.startsWith("http") || href.startsWith("tel:") || href.startsWith("mailto:") || href.includes(".html"))) {
-      return;
+  document.querySelectorAll(".mainnav a, .mobile-nav-panel a.mobile-nav-item").forEach((a) => {
+    const href = a.getAttribute("href");
+    if (!href || href.startsWith("http") || href.includes("#")) return;
+    if (norm(href) !== here) return;
+    a.classList.add("is-active");
+    a.setAttribute("aria-current", "page");
+    const sub = a.closest(".sub");
+    if (sub && sub.parentElement) {
+      const parentLink = sub.parentElement.querySelector(":scope > a");
+      if (parentLink) parentLink.classList.add("is-active");
     }
-
-    if (navTarget) {
-      e.preventDefault();
-      scrollToSection(navTarget, true, href || `/${navTarget}`);
-      return;
-    }
-
-    if (href && href.startsWith("/") && !href.startsWith("//") && routeMap.hasOwnProperty(href)) {
-      e.preventDefault();
-      scrollToSection(routeMap[href], true, href);
-    }
+    const det = a.closest("details");
+    if (det) det.open = true;
   });
-
-  // Handle browser back/forward buttons
-  window.addEventListener("popstate", () => {
-    const currentPath = window.location.pathname.toLowerCase().replace(/\/$/, "") || "/";
-    if (routeMap.hasOwnProperty(currentPath)) {
-      scrollToSection(routeMap[currentPath], false);
-    }
-  });
-
-  // Check on initial page load if URL has path like /about or /visit
-  const initialPath = window.location.pathname.toLowerCase().replace(/\/$/, "") || "/";
-  if (initialPath !== "/" && routeMap[initialPath]) {
-    setTimeout(() => {
-      scrollToSection(routeMap[initialPath], false);
-    }, 150);
-  }
 }
 
 function initYear() {
@@ -378,6 +316,20 @@ async function loadSiteSettings() {
   const hoursElem = document.getElementById("contact-hours");
   if (hoursElem) hoursElem.textContent = settings.officeHours;
 
+  // Generic hooks used by the shared header / footer / mobile bar on every page
+  const telHref = `tel:${settings.phone.replace(/\s+/g, "")}`;
+  document.querySelectorAll("[data-phone-text]").forEach((el) => { el.textContent = settings.phone; });
+  document.querySelectorAll("[data-phone-href]").forEach((el) => { el.href = telHref; });
+  document.querySelectorAll("[data-wa-href]").forEach((el) => {
+    const base = el.getAttribute("href") || "";
+    const q = base.includes("?") ? base.slice(base.indexOf("?")) : "";
+    el.href = `https://wa.me/${waNumber}${q}`;
+  });
+  document.querySelectorAll("[data-email-text]").forEach((el) => { el.textContent = settings.email; });
+  document.querySelectorAll("[data-email-href]").forEach((el) => { el.href = `mailto:${settings.email}`; });
+  document.querySelectorAll("[data-address]").forEach((el) => { el.textContent = settings.address; });
+  document.querySelectorAll("[data-hours]").forEach((el) => { el.textContent = settings.officeHours; });
+
   const heroTitle = document.getElementById("hero-title-text");
   if (heroTitle && settings.heroTitle) heroTitle.textContent = settings.heroTitle;
 
@@ -449,6 +401,11 @@ async function loadFees() {
     const tdMeals = document.createElement("td");
     tdMeals.textContent = item.meals || "Snacks & Hot Lunch";
 
+    tdLevel.setAttribute("data-label", "Programme Level");
+    tdGrades.setAttribute("data-label", "Grades");
+    tdAmount.setAttribute("data-label", "Termly Tuition & Care");
+    tdMeals.setAttribute("data-label", "Meals Included");
+
     tr.appendChild(tdLevel);
     tr.appendChild(tdGrades);
     tr.appendChild(tdAmount);
@@ -470,7 +427,7 @@ async function loadGallery() {
 
   if (db) {
     try {
-      const q = query(collection(db, "gallery"), orderBy("createdAt", "desc"), limit(16));
+      const q = query(collection(db, "gallery"), orderBy("createdAt", "desc"), limit(24));
       const snap = await getDocs(q);
       snap.forEach(docSnap => {
         items.push({ id: docSnap.id, ...docSnap.data() });
@@ -483,6 +440,9 @@ async function loadGallery() {
   if (items.length === 0) {
     items = FALLBACK_GALLERY;
   }
+
+  const maxItems = Number(container.dataset.limit) || 0;
+  if (maxItems) items = items.slice(0, maxItems);
 
   allGalleryItems = items;
   renderGallery(allGalleryItems);
@@ -604,7 +564,7 @@ async function loadReviews() {
   if (db) {
     try {
       // Only approved reviews appear publicly
-      const q = query(collection(db, "reviews"), where("approved", "==", true), limit(6));
+      const q = query(collection(db, "reviews"), where("approved", "==", true), limit(12));
       const snap = await getDocs(q);
       snap.forEach(docSnap => {
         reviews.push(docSnap.data());
@@ -617,6 +577,8 @@ async function loadReviews() {
   if (reviews.length === 0) {
     reviews = FALLBACK_REVIEWS;
   }
+
+  reviews = reviews.slice(0, Number(container.dataset.limit) || 12);
 
   container.innerHTML = "";
   reviews.forEach(rev => {
@@ -699,12 +661,6 @@ function initReviewModal() {
         return;
       }
 
-      const rateCheck = checkRateLimit("submit_review", 30);
-      if (!rateCheck.allowed) {
-        showToast(`Please wait ${rateCheck.remainingSeconds}s before submitting another review.`, "info");
-        return;
-      }
-
       const author = form.elements["author"].value.trim();
       const childInfo = form.elements["childInfo"].value.trim();
       const rating = Number(form.elements["rating"].value) || 5;
@@ -712,6 +668,12 @@ function initReviewModal() {
 
       if (!author || !content) {
         showToast("Please fill in your name and review details.", "error");
+        return;
+      }
+
+      const rateCheck = checkRateLimit("submit_review", 30);
+      if (!rateCheck.allowed) {
+        showToast(`Please wait ${rateCheck.remainingSeconds}s before submitting another review.`, "info");
         return;
       }
 
@@ -824,15 +786,20 @@ async function loadNews() {
 
   if (db) {
     try {
-      const q = query(collection(db, "news"), where("published", "==", true), orderBy("createdAt", "desc"), limit(3));
+      // No orderBy here (it would need a composite index); we sort in the browser instead.
+      const q = query(collection(db, "news"), where("published", "==", true), limit(24));
       const snap = await getDocs(q);
       snap.forEach(docSnap => news.push({ id: docSnap.id, ...docSnap.data() }));
+      const ms = (v) => (v && v.toMillis ? v.toMillis() : (v && v.seconds ? v.seconds * 1000 : 0));
+      news.sort((a, b) => ms(b.createdAt) - ms(a.createdAt));
     } catch (e) {
       console.log("Using fallback news:", e.message);
     }
   }
 
   if (news.length === 0) news = FALLBACK_NEWS;
+
+  news = news.slice(0, Number(container.dataset.limit) || 3);
 
   container.innerHTML = "";
   news.forEach(item => {
@@ -876,6 +843,107 @@ async function loadNews() {
 /**
  * Visit Request Form Handler
  */
+/* ==========================================================================
+   ONLINE ADMISSION APPLICATION (apply.html)
+   ========================================================================== */
+function initApplyForm() {
+  const form = document.getElementById("apply-form");
+  if (!form) return;
+
+  const body = document.getElementById("apply-fields");
+  const alertBox = document.getElementById("apply-form-alert");
+  const submitBtn = document.getElementById("apply-submit-btn");
+  const successState = document.getElementById("apply-success-state");
+  const refEl = document.getElementById("apply-reference");
+  const resetBtn = document.getElementById("apply-reset-btn");
+  const printBtn = document.getElementById("apply-print-btn");
+
+  renderApplicationForm(body, { office: false, idPrefix: "ap" });
+
+  function showError(msg, fieldName) {
+    form.querySelectorAll(".error").forEach((el) => el.classList.remove("error"));
+    if (alertBox) {
+      alertBox.style.display = "block";
+      alertBox.style.backgroundColor = "var(--color-danger-light)";
+      alertBox.style.color = "var(--color-danger)";
+      alertBox.textContent = msg;
+    }
+    const el = fieldName ? form.elements[fieldName] : null;
+    if (el) {
+      const target = el.type === "checkbox" ? el.closest(".check-inline") : el;
+      if (target) target.classList.add("error");
+      const scrollTo = el.type === "checkbox" ? el.closest(".check-inline") : el;
+      if (scrollTo && scrollTo.scrollIntoView) scrollTo.scrollIntoView({ behavior: "smooth", block: "center" });
+      if (el.focus) el.focus({ preventScroll: true });
+    } else if (alertBox) {
+      alertBox.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }
+
+  function showSuccess(reference) {
+    form.style.display = "none";
+    if (refEl) refEl.textContent = reference;
+    if (successState) successState.style.display = "block";
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  if (resetBtn) {
+    resetBtn.addEventListener("click", () => {
+      form.reset();
+      form.style.display = "";
+      if (successState) successState.style.display = "none";
+    });
+  }
+  if (printBtn) printBtn.addEventListener("click", () => window.print());
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (alertBox) { alertBox.style.display = "none"; alertBox.textContent = ""; }
+    form.querySelectorAll(".error").forEach((el) => el.classList.remove("error"));
+
+    // Bots fill the hidden field: pretend it worked, save nothing
+    if (!verifyHoneypot(form)) { showSuccess(generateReference()); return; }
+
+    const result = collectApplication(form, { office: false });
+    if (!result.ok) { showError(result.message, result.field); return; }
+
+    const rateCheck = checkRateLimit("submit_application", 20);
+    if (!rateCheck.allowed) {
+      showError(`Please wait ${rateCheck.remainingSeconds} seconds before submitting again.`);
+      return;
+    }
+
+    if (!db) {
+      showError("The application service is temporarily unavailable. Please call the school office.");
+      return;
+    }
+
+    submitBtn.disabled = true;
+    const original = submitBtn.innerHTML;
+    submitBtn.innerHTML = "<span>Submitting your application...</span>";
+
+    const reference = generateReference();
+    try {
+      await addDoc(collection(db, "applications"), {
+        ...result.data,
+        reference,
+        source: "online",
+        status: "New",
+        notes: "",
+        createdAt: serverTimestamp ? serverTimestamp() : new Date()
+      });
+      showSuccess(reference);
+      form.reset();
+    } catch (err) {
+      console.error("Application submit error:", err);
+      showError("We could not submit your application right now. Please try again, or call the school office.");
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = original;
+    }
+  });
+}
+
 function initVisitForm() {
   const form = document.getElementById("visit-form");
   const successState = document.getElementById("visit-success-state");
@@ -888,7 +956,7 @@ function initVisitForm() {
   if (resetBtn) {
     resetBtn.addEventListener("click", () => {
       form.reset();
-      form.style.display = "block";
+      form.style.display = "";
       successState.style.display = "none";
     });
   }
@@ -905,13 +973,6 @@ function initVisitForm() {
     if (!verifyHoneypot(form)) {
       form.style.display = "none";
       if (successState) successState.style.display = "block";
-      return;
-    }
-
-    // 2. Client-side cooldown rate limit
-    const rateCheck = checkRateLimit("submit_visit", 15);
-    if (!rateCheck.allowed) {
-      showError(`Please wait ${rateCheck.remainingSeconds} seconds before submitting again.`);
       return;
     }
 
@@ -938,6 +999,12 @@ function initVisitForm() {
     const phoneVal = validateKenyanPhone(phoneInput);
     if (!phoneVal.valid) {
       return showError(phoneVal.message || "Please enter a valid Kenyan phone number.");
+    }
+
+    // Client-side cooldown (only starts once the form is valid)
+    const rateCheck = checkRateLimit("submit_visit", 15);
+    if (!rateCheck.allowed) {
+      return showError(`Please wait ${rateCheck.remainingSeconds} seconds before submitting again.`);
     }
 
     // Submit payload
@@ -1015,15 +1082,15 @@ function initNewsletterForm() {
       return;
     }
 
-    const rateCheck = checkRateLimit("newsletter_sub", 15);
-    if (!rateCheck.allowed) {
-      showToast(`Please wait ${rateCheck.remainingSeconds}s.`, "info");
-      return;
-    }
-
     const email = form.elements["email"].value.trim();
     if (!email || !email.includes("@")) {
       showToast("Please enter a valid email address.", "error");
+      return;
+    }
+
+    const rateCheck = checkRateLimit("newsletter_sub", 15);
+    if (!rateCheck.allowed) {
+      showToast(`Please wait ${rateCheck.remainingSeconds}s.`, "info");
       return;
     }
 
