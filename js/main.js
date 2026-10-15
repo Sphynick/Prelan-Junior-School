@@ -49,9 +49,9 @@ if (isConfigured) {
    FALLBACK DATA (Sensible Placeholders for Nyathuna, Ngecha, Kenya)
    ========================================================================== */
 const FALLBACK_SETTINGS = {
-  phone: "+254 700 000 000",
-  whatsapp: "+254 700 000 000",
-  email: "info@prelanjuniorschool.sc.ke",
+  phone: "+254 714 865 779",
+  whatsapp: "+254 714 865 779",
+  email: "prelanjuniorsch@gmail.com",
   address: "Nyathuna, Ngecha, Kiambu County, Kenya",
   officeHours: "Mon – Fri: 7:30 AM – 4:30 PM | Sat: 8:30 AM – 12:30 PM",
   heroTitle: "Nurturing Every Learner's Potential Through CBC Excellence",
