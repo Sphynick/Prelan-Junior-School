@@ -161,8 +161,8 @@ async function loadPaybillForPortal() {
   let settings = {
     paybillNumber: "000000",
     paybillAccount: "Learner Adm No. / Name",
-    phone: "+254 700 000 000",
-    whatsapp: "+254 700 000 000"
+    phone: "+254 714 865 779",
+    whatsapp: "+254 714 865 779"
   };
 
   if (db) {

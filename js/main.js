@@ -51,7 +51,7 @@ if (isConfigured) {
 const FALLBACK_SETTINGS = {
   phone: "+254 714 865 779",
   whatsapp: "+254 714 865 779",
-  email: "prelanjuniorsch@gmail.com",
+  email: "Prelanjuniorsch@gmail.com",
   address: "Nyathuna, Ngecha, Kiambu County, Kenya",
   officeHours: "Mon – Fri: 7:30 AM – 4:30 PM | Sat: 8:30 AM – 12:30 PM",
   heroTitle: "Nurturing Every Learner's Potential Through CBC Excellence",
@@ -70,36 +70,15 @@ const FALLBACK_FEES = [
 ];
 
 const FALLBACK_GALLERY = [
-  {
-    title: "Sports Field & Campus Grounds",
-    category: "Grounds",
-    imageUrl: "/assets/images/sports-1200.jpg"
-  },
-  {
-    title: "Learner-Centered CBC Classroom",
-    category: "Classrooms",
-    imageUrl: "/assets/images/classroom-1200.jpg"
-  },
-  {
-    title: "4-K Junior Agricultural Science Project",
-    category: "Clubs",
-    imageUrl: "/assets/images/gardening-1200.jpg"
-  },
-  {
-    title: "Annual Sports & Athletics Field Day",
-    category: "Events",
-    imageUrl: "/assets/images/sports-1200.jpg"
-  },
-  {
-    title: "School Garden & Compound",
-    category: "Grounds",
-    imageUrl: "/assets/images/gardening-1200.jpg"
-  },
-  {
-    title: "Hands-on Practical CBC Modeling",
-    category: "Classrooms",
-    imageUrl: "/assets/images/classroom-1200.jpg"
-  }
+  { title: "Our Colourful School Compound", category: "Grounds", imageUrl: "/assets/images/gallery-campus.jpg" },
+  { title: "Pre-Primary Rest Time", category: "Classrooms", imageUrl: "/assets/images/gallery-nap.jpg" },
+  { title: "Music & Instrumental Training", category: "Clubs", imageUrl: "/assets/images/gallery-music-keyboard.jpg" },
+  { title: "Home Science Club: Young Taste Masters", category: "Clubs", imageUrl: "/assets/images/gallery-cooking.jpg" },
+  { title: "Young Taste Masters Team", category: "Clubs", imageUrl: "/assets/images/gallery-tastemasters.jpg" },
+  { title: "Young Chefs Competition Award", category: "Events", imageUrl: "/assets/images/gallery-medal.jpg" },
+  { title: "Career Day: Our Little Pilots", category: "Events", imageUrl: "/assets/images/gallery-pilots.jpg" },
+  { title: "Violin Performance on Stage", category: "Events", imageUrl: "/assets/images/gallery-music-violin.jpg" },
+  { title: "Kindergarten Graduation 2026", category: "Events", imageUrl: "/assets/images/gallery-graduation.jpg" }
 ];
 
 const FALLBACK_REVIEWS = [
@@ -151,19 +130,19 @@ const FALLBACK_NEWS = [
     title: "Term Admissions Ongoing: Join the Prelan Family",
     date: "Current Term",
     summary: "Enrolment is now open for Pre-Primary (PP1-PP2) and Primary Grades 1 to 6. Schedule your on-site campus tour today.",
-    imageUrl: "/assets/images/classroom-1200.jpg"
+    imageUrl: "/assets/images/pilots-1200.jpg"
   },
   {
     title: "Junior Environmental & 4-K Club Tree Planting Day",
     date: "Recent Event",
     summary: "Our learners participated in an exciting environmental conservation project cultivating indigenous tree seedlings within our campus gardens.",
-    imageUrl: "/assets/images/gardening-1200.jpg"
+    imageUrl: "/assets/images/campus-1200.jpg"
   },
   {
     title: "Upcoming Academic Clinic & Parent Consultation",
     date: "Term Calendar",
     summary: "Parents and guardians are warmly invited to discuss individual learner assessment progress with class educators.",
-    imageUrl: "/assets/images/sports-1200.jpg"
+    imageUrl: "/assets/images/graduation-1200.jpg"
   }
 ];
 

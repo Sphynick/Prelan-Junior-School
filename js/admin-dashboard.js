@@ -1592,6 +1592,7 @@ async function loadParentsAndLearners() {
   }
 
   tbody.innerHTML = "";
+  loadParentRequests();
 
   // Populate payment select dropdown
   if (paySelect) {
@@ -1666,6 +1667,95 @@ async function loadParentsAndLearners() {
   }
 
   initCreateParentForm();
+}
+
+/* Pending Google sign-up requests: approve (creates parents/{uid}) or reject */
+async function loadParentRequests() {
+  const panel = document.getElementById("parent-requests-panel");
+  const body = document.getElementById("parent-requests-body");
+  if (!panel || !body || !db) return;
+
+  let requests = [];
+  try {
+    const snap = await getDocs(collection(db, "parentRequests"));
+    snap.forEach(d => requests.push({ id: d.id, ...d.data() }));
+  } catch (e) {
+    console.log("Parent requests:", e.message);
+    panel.style.display = "none";
+    return;
+  }
+
+  body.innerHTML = "";
+  panel.style.display = requests.length ? "block" : "none";
+
+  requests.forEach(r => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td><strong>${escapeHtml(r.name || "—")}</strong></td>
+      <td>${escapeHtml(r.email || "")}</td>
+      <td>${escapeHtml(r.phone || "")}</td>
+      <td>${escapeHtml(r.childName || "")}${r.admNo ? " (" + escapeHtml(r.admNo) + ")" : ""}</td>
+      <td>
+        <button type="button" class="btn btn-sm btn-primary approve-req-btn">Approve</button>
+        <button type="button" class="btn btn-sm btn-outline reject-req-btn" style="border-color: var(--color-danger); color: var(--color-danger);">Reject</button>
+      </td>
+    `;
+    tr.querySelector(".approve-req-btn").onclick = () => openApproveParent(r);
+    tr.querySelector(".reject-req-btn").onclick = async () => {
+      if (!confirm(`Reject the access request from ${r.name || r.email}?`)) return;
+      try {
+        await deleteDoc(doc(db, "parentRequests", r.id));
+        showToast("Request rejected.", "info");
+        loadParentRequests();
+      } catch (err) {
+        showToast("Error rejecting request: " + err.message, "error");
+      }
+    };
+    body.appendChild(tr);
+  });
+}
+
+function openApproveParent(req) {
+  const form = document.getElementById("approve-parent-form");
+  if (!form) return;
+  form.reset();
+  document.getElementById("approve-parent-summary").textContent =
+    `${req.name || "Parent"} (${req.email}) • ${req.phone || "no phone"}`;
+  document.getElementById("approve-learner-name").value = req.childName || "";
+  document.getElementById("approve-learner-adm").value = req.admNo || "";
+
+  const btn = document.getElementById("approve-parent-submit-btn");
+  form.onsubmit = async (e) => {
+    e.preventDefault();
+    btn.disabled = true;
+    btn.textContent = "Approving...";
+    try {
+      await setDoc(doc(db, "parents", req.id), {
+        name: req.name || req.email,
+        phone: req.phone || "",
+        email: req.email,
+        balance: Number(document.getElementById("approve-balance").value) || 0,
+        learners: [{
+          name: document.getElementById("approve-learner-name").value.trim(),
+          admNo: document.getElementById("approve-learner-adm").value.trim(),
+          grade: document.getElementById("approve-learner-grade").value
+        }],
+        signInMethod: "google",
+        createdAt: serverTimestamp ? serverTimestamp() : new Date()
+      });
+      await deleteDoc(doc(db, "parentRequests", req.id));
+      showToast(`${req.name || req.email} can now open the parent portal with Google.`, "success");
+      closeModal("modal-approve-parent");
+      loadParentsAndLearners();
+    } catch (err) {
+      console.error("Approve parent error:", err);
+      showToast("Error approving parent: " + err.message, "error");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Approve & Activate Portal Access";
+    }
+  };
+  openModal("modal-approve-parent");
 }
 
 function initCreateParentForm() {

@@ -205,3 +205,19 @@ Before opening the site to parents, verify the following:
 - [x] **Admin Stays Logged In During Parent Account Creation:** From the admin dashboard under **Parents & Learners**, create a parent account. Verify that the secondary Firebase app creates the parent credentials **without logging out the administrator**.
 - [x] **Parent Privacy Isolation:** Log in to `/portal/login.html` with the newly created parent account. Verify that the parent can only see their own child, their own fee balance, and their own M-Pesa receipts. Verify that parents cannot access `/admin/dashboard.html` or other parents' data.
 - [x] **Security Rules Enforced:** Verify that unauthenticated public visitors cannot read documents from `/visits`, `/subscribers`, `/parents`, or `/payments`.
+
+
+---
+
+## Parent Google Sign-In / Sign-Up
+
+Parents can use **Continue with Google** on `/portal/login.html`.
+
+1. **Enable it once:** Firebase Console → Authentication → Sign-in method → **Google** → Enable → Save.
+2. **Authorised domains:** Authentication → Settings → Authorised domains. `localhost` is there by default; add your live domain (e.g. your Vercel domain).
+3. **Publish the updated `firestore.rules`** (it adds a `parentRequests` collection).
+
+How it works:
+- A parent who signs in with Google but is not yet linked to a learner sees a short form (phone, child's name, admission number) and sends an access request. A request gives **no access** to any data.
+- The admin sees it under **Admin → Parents → Pending Google sign-up requests** and clicks **Approve**, confirming the learner, grade and fee balance. That creates `parents/{uid}`; the parent signs in with Google again and lands in the portal.
+- A parent who already has a school-created password account and signs in with Google using the **same email** keeps the same account (same UID), so their learner and payment history stay linked.

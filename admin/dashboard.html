@@ -318,10 +318,24 @@
               <div>
                 <h2 class="panel-title">Parents & Registered Learners</h2>
                 <p style="font-size: 0.85rem; color: var(--color-slate-500);">
-                  Parents cannot register publicly. Only school administration can create accounts.
+                  Parents can request access by signing in with Google. Approve their request below, or create an account for them manually.
                 </p>
               </div>
               <button type="button" id="open-new-parent-btn" class="btn btn-sm btn-primary">+ Create Parent Account</button>
+            </div>
+
+            <!-- Pending Google sign-up requests (rendered via JS) -->
+            <div id="parent-requests-panel" style="display: none; margin-bottom: 1.5rem; padding: 1rem; border: 1px solid #fde68a; background: #fffbeb; border-radius: var(--radius-md);">
+              <h3 style="font-size: 1.05rem; color: var(--color-primary-dark); margin-bottom: 0.25rem;">Pending Google sign-up requests</h3>
+              <p style="font-size: 0.8rem; color: var(--color-slate-500); margin-bottom: 0.75rem;">Check each request against your admission records before approving.</p>
+              <div class="table-responsive">
+                <table class="fees-table">
+                  <thead>
+                    <tr><th>Parent</th><th>Email</th><th>Phone</th><th>Child / Adm No.</th><th>Actions</th></tr>
+                  </thead>
+                  <tbody id="parent-requests-body"></tbody>
+                </table>
+              </div>
             </div>
 
             <div class="table-responsive">
@@ -689,6 +703,47 @@
         <button type="submit" id="create-parent-submit-btn" class="btn btn-primary btn-block" style="margin-top: 1rem;">
           Create Parent Account
         </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Approve Parent Google Request -->
+  <div class="modal-overlay" id="modal-approve-parent">
+    <div class="modal-card">
+      <button type="button" class="modal-close-btn" data-close-modal>&times;</button>
+      <h3 style="font-size: 1.35rem; color: var(--color-primary-dark); margin-bottom: 0.5rem;">Approve Parent Access</h3>
+      <p id="approve-parent-summary" style="font-size: 0.85rem; color: var(--color-slate-500); margin-bottom: 1.25rem;"></p>
+      <form id="approve-parent-form">
+        <div class="form-grid form-grid-2" style="margin-bottom: 1rem;">
+          <div class="form-group">
+            <label for="approve-learner-name" class="form-label">Learner's Full Name *</label>
+            <input type="text" id="approve-learner-name" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="approve-learner-adm" class="form-label">Admission Number *</label>
+            <input type="text" id="approve-learner-adm" class="form-control" required placeholder="e.g. PJS/2025/082">
+          </div>
+        </div>
+        <div class="form-grid form-grid-2" style="margin-bottom: 1rem;">
+          <div class="form-group">
+            <label for="approve-learner-grade" class="form-label">Grade / Class *</label>
+            <select id="approve-learner-grade" class="form-control" required>
+              <option value="PP1">Pre-Primary 1 (PP1)</option>
+              <option value="PP2">Pre-Primary 2 (PP2)</option>
+              <option value="Grade 1">Grade 1</option>
+              <option value="Grade 2">Grade 2</option>
+              <option value="Grade 3">Grade 3</option>
+              <option value="Grade 4">Grade 4</option>
+              <option value="Grade 5">Grade 5</option>
+              <option value="Grade 6">Grade 6</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="approve-balance" class="form-label">Initial Term Fee Balance (KES)</label>
+            <input type="number" id="approve-balance" class="form-control" value="0">
+          </div>
+        </div>
+        <button type="submit" id="approve-parent-submit-btn" class="btn btn-primary btn-block">Approve &amp; Activate Portal Access</button>
       </form>
     </div>
   </div>

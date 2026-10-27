@@ -37,6 +37,25 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // 2b. Parent Access Requests (Google sign-up):
+    // A signed-in parent may create/read/update ONLY their own request, and only with a
+    // verified email. Requests grant NO access to any data; an admin must approve one
+    // (which creates parents/{uid}). Only admins can delete requests.
+    match /parentRequests/{requestId} {
+      allow read: if isAdmin() || isParent(requestId);
+      allow create, update: if isParent(requestId)
+                            && request.auth.token.email_verified == true
+                            && request.resource.data.keys().hasOnly(['name', 'email', 'phone', 'childName', 'admNo', 'status', 'createdAt'])
+                            && request.resource.data.status == 'pending'
+                            && request.resource.data.email == request.auth.token.email
+                            && request.resource.data.name is string && request.resource.data.name.size() <= 100
+                            && request.resource.data.phone is string && request.resource.data.phone.size() <= 30
+                            && request.resource.data.childName is string && request.resource.data.childName.size() > 0
+                            && request.resource.data.childName.size() <= 100
+                            && request.resource.data.admNo is string && request.resource.data.admNo.size() <= 40;
+      allow delete: if isAdmin();
+    }
+
     // 3. Visits & Applications Collection:
     // Public may CREATE only with valid fields and rate-friendly payload size.
     // Public cannot read, update, or delete. Admins have full access.
