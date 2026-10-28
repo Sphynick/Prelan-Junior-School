@@ -314,7 +314,7 @@ function loadAnnouncementsAndDocs() {
   if (docContainer) {
     const sampleDocs = [
       {
-        title: "Term Academic Calendar 2025/2026",
+        title: "Term Academic Calendar 2026/2027",
         type: "PDF Document",
         size: "350 KB"
       },

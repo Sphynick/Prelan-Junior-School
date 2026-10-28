@@ -57,7 +57,7 @@ const FALLBACK_SETTINGS = {
   heroTitle: "Nurturing Every Learner's Potential Through CBC Excellence",
   heroSubtitle: "Located in the serene hills of Nyathuna, Ngecha, Prelan Junior School provides a grounded, supportive environment where learners build real-life competencies, strong character, and a lifelong passion for discovery.",
   admissionBannerOpen: true,
-  admissionBannerText: "Enrolment for Academic Year 2025/2026 is currently ongoing for PP1 through Grade 6.",
+  admissionBannerText: "Enrolment for Academic Year 2026/2027 is currently ongoing for PP1 through Grade 6.",
   paybillNumber: "000000",
   paybillAccount: "Learner Adm No. / Name",
   paybillName: "Prelan Junior School"
@@ -69,8 +69,14 @@ const FALLBACK_FEES = [
   { level: "Upper Primary", grades: "Grades 4 – 6", amount: "____", meals: "Snacks & Hot Lunch" }
 ];
 
+// The two school videos shown on the Gallery page. Fixed in the code on purpose:
+// the admin dashboard cannot add videos, so no more can be added without a code change.
+const SITE_VIDEOS = [
+  { title: "Sports Day: Learners' Relay Races", category: "Events", imageUrl: "/assets/images/gallery-video-2-poster.jpg", videoUrl: "/assets/videos/school-video-2.mp4" },
+  { title: "Learners in the Computer Lab", category: "Classrooms", imageUrl: "/assets/images/gallery-video-1-poster.jpg", videoUrl: "/assets/videos/school-video-1.mp4" }
+];
+
 const FALLBACK_GALLERY = [
-  { title: "A Day at Prelan (Video)", category: "Events", imageUrl: "/assets/images/gallery-video-1-poster.jpg", videoUrl: "/assets/videos/school-video-1.mp4" },
   { title: "Our Colourful School Compound", category: "Grounds", imageUrl: "/assets/images/gallery-campus.jpg" },
   { title: "Pre-Primary Rest Time", category: "Classrooms", imageUrl: "/assets/images/gallery-nap.jpg" },
   { title: "Music & Instrumental Training", category: "Clubs", imageUrl: "/assets/images/gallery-music-keyboard.jpg" },
@@ -422,7 +428,12 @@ async function loadGallery() {
   }
 
   const maxItems = Number(container.dataset.limit) || 0;
-  if (maxItems) items = items.slice(0, maxItems);
+  if (maxItems) {
+    items = items.slice(0, maxItems);
+  } else {
+    // Full Gallery page: the two school videos come first
+    items = [...SITE_VIDEOS, ...items.filter(i => !i.videoUrl)];
+  }
 
   allGalleryItems = items;
   renderGallery(allGalleryItems);

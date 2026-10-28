@@ -1059,7 +1059,6 @@ function initGalleryForm() {
   const catInput = document.getElementById("gal-cat");
   const fileInput = document.getElementById("gal-file");
   const urlInput = document.getElementById("gal-url");
-  const videoInput = document.getElementById("gal-video-url");
   const submitBtn = document.getElementById("save-gallery-submit-btn");
 
   if (addBtn) {
@@ -1085,9 +1084,8 @@ function initGalleryForm() {
         }
       }
 
-      const videoUrl = videoInput ? videoInput.value.trim() : "";
-      if (!finalImg && !videoUrl) {
-        showToast("Please choose a photo, or provide a video link.", "error");
+      if (!finalImg) {
+        showToast("Please choose an image file or provide an image URL.", "error");
         submitBtn.disabled = false;
         submitBtn.textContent = "Add to Gallery";
         return;
@@ -1099,7 +1097,6 @@ function initGalleryForm() {
         imageUrl: finalImg,
         createdAt: serverTimestamp ? serverTimestamp() : new Date()
       };
-      if (videoUrl) photoData.videoUrl = videoUrl;
 
       try {
         if (db) {
@@ -1109,7 +1106,7 @@ function initGalleryForm() {
           localStorage.setItem("prelan_gallery_local", JSON.stringify(allGallery));
         }
 
-        showToast(photoData.videoUrl ? "Video added to gallery." : "Photo added to gallery.", "success");
+        showToast("Photo added to gallery.", "success");
         closeModal("modal-gallery");
         loadGallery();
       } catch (err) {
