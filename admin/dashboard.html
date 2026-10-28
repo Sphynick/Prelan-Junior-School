@@ -578,7 +578,7 @@
   <div class="modal-overlay" id="modal-gallery">
     <div class="modal-card">
       <button type="button" class="modal-close-btn" data-close-modal>&times;</button>
-      <h3 style="font-size: 1.35rem; color: var(--color-primary-dark); margin-bottom: 1rem;">Add Photo to Gallery</h3>
+      <h3 style="font-size: 1.35rem; color: var(--color-primary-dark); margin-bottom: 1rem;">Add Photo or Video to Gallery</h3>
 
       <form id="gallery-form">
         <div class="form-group" style="margin-bottom: 1rem;">
@@ -600,7 +600,13 @@
           <label for="gal-file" class="form-label">Photo (Upload file or URL) *</label>
           <input type="file" id="gal-file" class="form-control" accept="image/*">
           <input type="url" id="gal-url" class="form-control" style="margin-top: 0.5rem;" placeholder="Or paste image URL (https://...)">
-          <span class="form-hint">Images are automatically resized and compressed.</span>
+          <span class="form-hint">Images are automatically resized and compressed. For a video, the photo is optional and is used as its cover.</span>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1.5rem;">
+          <label for="gal-video-url" class="form-label">Video Link (optional)</label>
+          <input type="url" id="gal-video-url" class="form-control" placeholder="YouTube link, or /assets/videos/my-video.mp4">
+          <span class="form-hint">Paste a YouTube link (unlisted works) or the path of an .mp4 you uploaded to the website's assets/videos folder.</span>
         </div>
 
         <button type="submit" id="save-gallery-submit-btn" class="btn btn-primary btn-block">Add to Gallery</button>

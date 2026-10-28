@@ -156,7 +156,12 @@ document.addEventListener("DOMContentLoaded", () => {
         requestPending.style.display = "block";
       } catch (err) {
         console.error("Access request error:", err);
-        showToast("Could not send your request. Please try again or call the school office.", "error");
+        if (err.code === "permission-denied") {
+          showToast("The school's database is not yet set up to accept sign-up requests. Please call the school office.", "error");
+          console.warn("permission-denied: publish the latest firestore.rules (parentRequests) in the Firebase Console.");
+        } else {
+          showToast("Could not send your request. Please try again or call the school office.", "error");
+        }
       } finally {
         btn.disabled = false;
         btn.textContent = "Send Access Request";

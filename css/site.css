@@ -531,3 +531,11 @@ textarea.form-control { min-height: 96px; resize: vertical; }
 /* School motto */
 .footer-motto { font-family: Lora, Georgia, serif; font-style: italic; color: var(--accent); font-size: 1.05rem; margin: -4px 0 10px; }
 .hero-motto { font-family: Lora, Georgia, serif; font-style: italic; font-size: 1.15rem; color: var(--accent); margin: -6px 0 20px; }
+
+/* Gallery videos */
+.gallery-card { position: relative; }
+.gallery-play-badge { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 56px; height: 56px; border-radius: 50%; background: rgba(0,0,0,.6); color: #fff; display: flex; align-items: center; justify-content: center; border: 2px solid rgba(255,255,255,.85); pointer-events: none; z-index: 1; }
+.gallery-card-video:hover .gallery-play-badge { background: var(--accent, #fdb913); color: #111; }
+.lightbox-video { width: 100%; align-items: center; justify-content: center; background: #000; }
+.lightbox-video video { max-height: 70vh; width: 100%; background: #000; }
+.lightbox-video iframe { width: 100%; aspect-ratio: 16 / 9; max-height: 70vh; border: 0; }

@@ -1033,9 +1033,9 @@ async function loadGallery() {
     const card = document.createElement("div");
     card.className = "gallery-card";
     card.innerHTML = `
-      <img src="${item.imageUrl}" alt="${escapeHtml(item.title)}">
+      <img src="${item.imageUrl || ""}" alt="${escapeHtml(item.title)}">
       <div class="gallery-card-overlay">
-        <span class="gallery-tag">${escapeHtml(item.category)}</span>
+        <span class="gallery-tag">${item.videoUrl ? "&#9654; Video &bull; " : ""}${escapeHtml(item.category)}</span>
         <div class="gallery-title">${escapeHtml(item.title)}</div>
         <button type="button" class="btn btn-sm btn-outline delete-gal-btn" style="border-color: #f87171; color: #fff; background: rgba(220, 38, 38, 0.7); margin-top: 0.5rem; align-self: flex-start;">Delete</button>
       </div>
@@ -1059,6 +1059,7 @@ function initGalleryForm() {
   const catInput = document.getElementById("gal-cat");
   const fileInput = document.getElementById("gal-file");
   const urlInput = document.getElementById("gal-url");
+  const videoInput = document.getElementById("gal-video-url");
   const submitBtn = document.getElementById("save-gallery-submit-btn");
 
   if (addBtn) {
@@ -1084,8 +1085,9 @@ function initGalleryForm() {
         }
       }
 
-      if (!finalImg) {
-        showToast("Please choose an image file or provide an image URL.", "error");
+      const videoUrl = videoInput ? videoInput.value.trim() : "";
+      if (!finalImg && !videoUrl) {
+        showToast("Please choose a photo, or provide a video link.", "error");
         submitBtn.disabled = false;
         submitBtn.textContent = "Add to Gallery";
         return;
@@ -1097,6 +1099,7 @@ function initGalleryForm() {
         imageUrl: finalImg,
         createdAt: serverTimestamp ? serverTimestamp() : new Date()
       };
+      if (videoUrl) photoData.videoUrl = videoUrl;
 
       try {
         if (db) {
@@ -1106,7 +1109,7 @@ function initGalleryForm() {
           localStorage.setItem("prelan_gallery_local", JSON.stringify(allGallery));
         }
 
-        showToast("Photo added to gallery.", "success");
+        showToast(photoData.videoUrl ? "Video added to gallery." : "Photo added to gallery.", "success");
         closeModal("modal-gallery");
         loadGallery();
       } catch (err) {

@@ -70,6 +70,7 @@ const FALLBACK_FEES = [
 ];
 
 const FALLBACK_GALLERY = [
+  { title: "A Day at Prelan (Video)", category: "Events", imageUrl: "/assets/images/gallery-video-1-poster.jpg", videoUrl: "/assets/videos/school-video-1.mp4" },
   { title: "Our Colourful School Compound", category: "Grounds", imageUrl: "/assets/images/gallery-campus.jpg" },
   { title: "Pre-Primary Rest Time", category: "Classrooms", imageUrl: "/assets/images/gallery-nap.jpg" },
   { title: "Music & Instrumental Training", category: "Clubs", imageUrl: "/assets/images/gallery-music-keyboard.jpg" },
@@ -428,6 +429,24 @@ async function loadGallery() {
   initGalleryTabs();
 }
 
+/**
+ * Turn a pasted video link into something we can play.
+ * Supports direct files (.mp4/.webm/.mov) and YouTube links (watch, youtu.be, shorts, embed).
+ */
+function parseVideoUrl(url) {
+  if (!url) return null;
+  const u = String(url).trim();
+  const yt = u.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+  if (yt) {
+    return {
+      type: "youtube",
+      src: `https://www.youtube-nocookie.com/embed/${yt[1]}?rel=0&autoplay=1`,
+      thumb: `https://img.youtube.com/vi/${yt[1]}/hqdefault.jpg`
+    };
+  }
+  return { type: "file", src: u, thumb: "" };
+}
+
 function renderGallery(items) {
   const container = document.getElementById("gallery-container");
   if (!container) return;
@@ -445,8 +464,12 @@ function renderGallery(items) {
     card.setAttribute("tabindex", "0");
     card.setAttribute("aria-label", `View photo: ${item.title}`);
 
+    const video = parseVideoUrl(item.videoUrl);
+    if (video) card.classList.add("gallery-card-video");
+    if (video) card.setAttribute("aria-label", `Play video: ${item.title}`);
+
     const img = document.createElement("img");
-    img.src = item.imageUrl || "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=800&q=80";
+    img.src = item.imageUrl || (video && video.thumb) || "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=800&q=80";
     img.alt = item.title;
     img.loading = "lazy";
 
@@ -464,6 +487,13 @@ function renderGallery(items) {
     overlay.appendChild(tag);
     overlay.appendChild(title);
     card.appendChild(img);
+    if (video) {
+      const play = document.createElement("span");
+      play.className = "gallery-play-badge";
+      play.setAttribute("aria-hidden", "true");
+      play.innerHTML = '<svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+      card.appendChild(play);
+    }
     card.appendChild(overlay);
 
     card.addEventListener("click", () => openLightbox(item));
@@ -503,6 +533,9 @@ function initLightbox() {
   function close() {
     modal.classList.remove("active");
     document.body.style.overflow = "";
+    // Stop any playing video
+    const vw = document.getElementById("lightbox-video");
+    if (vw) vw.innerHTML = "";
   }
 
   if (closeBtn) closeBtn.addEventListener("click", close);
@@ -522,7 +555,33 @@ function openLightbox(item) {
 
   if (!modal || !img) return;
 
-  img.src = item.imageUrl || "";
+  const vw = document.getElementById("lightbox-video");
+  const video = parseVideoUrl(item.videoUrl);
+  if (vw) {
+    vw.innerHTML = "";
+    vw.style.display = video ? "flex" : "none";
+  }
+  img.style.display = video ? "none" : "";
+  if (video && vw) {
+    if (video.type === "youtube") {
+      const frame = document.createElement("iframe");
+      frame.src = video.src;
+      frame.title = item.title || "Prelan Junior School video";
+      frame.allow = "accelerometer; autoplay; encrypted-media; picture-in-picture; fullscreen";
+      frame.allowFullscreen = true;
+      vw.appendChild(frame);
+    } else {
+      const player = document.createElement("video");
+      player.src = video.src;
+      player.controls = true;
+      player.autoplay = true;
+      player.playsInline = true;
+      player.preload = "metadata";
+      if (item.imageUrl) player.poster = item.imageUrl;
+      vw.appendChild(player);
+    }
+  }
+  img.src = video ? "" : (item.imageUrl || "");
   img.alt = item.title || "Prelan Junior School";
   if (title) title.textContent = item.title || "";
   if (cat) cat.textContent = item.category || "Campus";
