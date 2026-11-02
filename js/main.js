@@ -46,28 +46,20 @@ if (isConfigured) {
 }
 
 /* ==========================================================================
-   FALLBACK DATA (Sensible Placeholders for Nyathuna, Ngecha, Kenya)
+   FALLBACK DATA (Sensible Placeholders)
    ========================================================================== */
 const FALLBACK_SETTINGS = {
   phone: "+254 714 865 779",
   whatsapp: "+254 714 865 779",
   email: "Prelanjuniorsch@gmail.com",
-  address: "Nyathuna, Ngecha, Kiambu County, Kenya",
+  address: "",
   officeHours: "Mon – Fri: 7:30 AM – 4:30 PM | Sat: 8:30 AM – 12:30 PM",
-  heroTitle: "Nurturing Every Learner's Potential Through CBC Excellence",
-  heroSubtitle: "Located in the serene hills of Nyathuna, Ngecha, Prelan Junior School provides a grounded, supportive environment where learners build real-life competencies, strong character, and a lifelong passion for discovery.",
+  heroTitle: "Nurturing Every Learner's Potential Through CBE Excellence",
+  heroSubtitle: "Prelan Junior School provides a grounded, supportive environment where learners build real-life competencies, strong character, and a lifelong passion for discovery.",
   admissionBannerOpen: true,
-  admissionBannerText: "Enrolment for Academic Year 2026/2027 is currently ongoing for PP1 through Grade 6.",
-  paybillNumber: "000000",
-  paybillAccount: "Learner Adm No. / Name",
-  paybillName: "Prelan Junior School"
+  admissionBannerText: "Enrolment for Academic Year 2026/2027 is currently ongoing for Creche through Grade 9.",
 };
 
-const FALLBACK_FEES = [
-  { level: "Pre-Primary", grades: "PP1 & PP2", amount: "____", meals: "Snacks & Hot Lunch" },
-  { level: "Lower Primary", grades: "Grades 1 – 3", amount: "____", meals: "Snacks & Hot Lunch" },
-  { level: "Upper Primary", grades: "Grades 4 – 6", amount: "____", meals: "Snacks & Hot Lunch" }
-];
 
 // The two school videos shown on the Gallery page. Fixed in the code on purpose:
 // the admin dashboard cannot add videos, so no more can be added without a code change.
@@ -78,32 +70,30 @@ const SITE_VIDEOS = [
 
 const FALLBACK_GALLERY = [
   { title: "Our Colourful School Compound", category: "Grounds", imageUrl: "/assets/images/gallery-campus.jpg" },
-  { title: "Pre-Primary Rest Time", category: "Classrooms", imageUrl: "/assets/images/gallery-nap.jpg" },
+  { title: "Kindergarten Rest Time", category: "Classrooms", imageUrl: "/assets/images/gallery-nap.jpg" },
   { title: "Music & Instrumental Training", category: "Clubs", imageUrl: "/assets/images/gallery-music-keyboard.jpg" },
   { title: "Home Science Club: Young Taste Masters", category: "Clubs", imageUrl: "/assets/images/gallery-cooking.jpg" },
   { title: "Young Taste Masters Team", category: "Clubs", imageUrl: "/assets/images/gallery-tastemasters.jpg" },
-  { title: "Young Chefs Competition Award", category: "Events", imageUrl: "/assets/images/gallery-medal.jpg" },
   { title: "Career Day: Our Little Pilots", category: "Events", imageUrl: "/assets/images/gallery-pilots.jpg" },
-  { title: "Violin Performance on Stage", category: "Events", imageUrl: "/assets/images/gallery-music-violin.jpg" },
   { title: "Kindergarten Graduation 2026", category: "Events", imageUrl: "/assets/images/gallery-graduation.jpg" }
 ];
 
 const FALLBACK_REVIEWS = [
   {
     author: "Mary Wanjiku",
-    childInfo: "Parent of Grade 2 Learner, Ngecha",
+    childInfo: "Parent of Grade 2 Learner",
     rating: 5,
-    content: "Prelan has been a blessing for my daughter. Her reading fluency and confidence in public speaking have grown tremendously under CBC teachers who truly care."
+    content: "Prelan has been a blessing for my daughter. Her reading fluency and confidence in public speaking have grown tremendously under CBE teachers who truly care."
   },
   {
     author: "David Kamau",
-    childInfo: "Parent of PP2 Learner, Nyathuna",
+    childInfo: "Parent of PP2 Learner",
     rating: 5,
     content: "The balanced meals, strict campus safety, and caring bus service give us total peace of mind every morning. The teachers communicate with parents constantly."
   },
   {
     author: "Faith Njoki",
-    childInfo: "Parent of Grade 5 Learner, Ngecha",
+    childInfo: "Parent of Grade 5 Learner",
     rating: 5,
     content: "The practical science projects and clubs have helped my son discover his passion for agriculture and ICT. Prelan's environment is very serene and disciplined."
   }
@@ -112,7 +102,7 @@ const FALLBACK_REVIEWS = [
 const FALLBACK_FAQS = [
   {
     question: "What curriculum does Prelan Junior School follow?",
-    answer: "We strictly follow the Kenyan Competency Based Curriculum (CBC) approved by KICD and the Ministry of Education, covering Pre-Primary (PP1–PP2), Lower Primary (Grades 1–3), and Upper Primary (Grades 4–6)."
+    answer: "We strictly follow the Kenyan Competency Based Education (CBE) approved by KICD and the Ministry of Education, covering Kindergarten (Creche, Reception, PP1 and PP2), Primary (Grades 1–6) and Junior Secondary (Grades 7–9)."
   },
   {
     question: "What are your daily school operating hours?",
@@ -120,7 +110,7 @@ const FALLBACK_FAQS = [
   },
   {
     question: "Do you offer reliable school bus transport?",
-    answer: "Yes. Prelan provides managed door-to-door and central pick-up point school transport across Nyathuna, Ngecha, Wangige, Rironi, and neighbouring environs."
+    answer: "Yes. Prelan provides school transport for learners."
   },
   {
     question: "Are hot meals and snacks provided at school?",
@@ -136,7 +126,7 @@ const FALLBACK_NEWS = [
   {
     title: "Term Admissions Ongoing: Join the Prelan Family",
     date: "Current Term",
-    summary: "Enrolment is now open for Pre-Primary (PP1-PP2) and Primary Grades 1 to 6. Schedule your on-site campus tour today.",
+    summary: "Enrolment is now open for Kindergarten (Creche to PP2), Primary Grades 1 to 6 and Junior Secondary Grades 7 to 9. Schedule your on-site campus tour today.",
     imageUrl: "/assets/images/pilots-1200.jpg"
   },
   {
@@ -162,7 +152,6 @@ document.addEventListener("DOMContentLoaded", () => {
   initMobileNav();
   initLightbox();
   loadSiteSettings();
-  loadFees();
   loadGallery();
   loadReviews();
   loadFAQs();
@@ -335,69 +324,6 @@ async function loadSiteSettings() {
     }
   }
 
-  // Paybill info
-  const pbNo = document.getElementById("paybill-number");
-  const pbHint = document.getElementById("paybill-hint-no");
-  if (pbNo) pbNo.textContent = settings.paybillNumber || "000000";
-  if (pbHint) pbHint.textContent = settings.paybillNumber || "000000";
-
-  const pbAcc = document.getElementById("paybill-account");
-  if (pbAcc) pbAcc.textContent = settings.paybillAccount || "Child Adm No.";
-
-  const pbName = document.getElementById("paybill-name");
-  if (pbName) pbName.textContent = settings.paybillName || "Prelan Junior School";
-}
-
-/**
- * Load Fees Table
- */
-async function loadFees() {
-  const tbody = document.getElementById("fees-tbody");
-  if (!tbody) return;
-
-  let feeRows = FALLBACK_FEES;
-
-  if (db) {
-    try {
-      const snap = await getDoc(doc(db, "fees", "general"));
-      if (snap.exists() && snap.data().items && snap.data().items.length > 0) {
-        feeRows = snap.data().items;
-      }
-    } catch (e) {
-      console.log("Using fallback fees:", e.message);
-    }
-  }
-
-  tbody.innerHTML = "";
-  feeRows.forEach(item => {
-    const tr = document.createElement("tr");
-
-    const tdLevel = document.createElement("td");
-    const strong = document.createElement("strong");
-    strong.textContent = item.level;
-    tdLevel.appendChild(strong);
-
-    const tdGrades = document.createElement("td");
-    tdGrades.textContent = item.grades;
-
-    const tdAmount = document.createElement("td");
-    tdAmount.className = "fee-amount";
-    tdAmount.textContent = formatKES(item.amount);
-
-    const tdMeals = document.createElement("td");
-    tdMeals.textContent = item.meals || "Snacks & Hot Lunch";
-
-    tdLevel.setAttribute("data-label", "Programme Level");
-    tdGrades.setAttribute("data-label", "Grades");
-    tdAmount.setAttribute("data-label", "Termly Tuition & Care");
-    tdMeals.setAttribute("data-label", "Meals Included");
-
-    tr.appendChild(tdLevel);
-    tr.appendChild(tdGrades);
-    tr.appendChild(tdAmount);
-    tr.appendChild(tdMeals);
-    tbody.appendChild(tr);
-  });
 }
 
 /**

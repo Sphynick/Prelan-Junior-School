@@ -291,15 +291,6 @@ body { padding-bottom: 66px; }
 .fees-table td { padding: 14px 16px; border-top: 1px solid var(--line); vertical-align: top; }
 .fees-table tbody tr:nth-child(even) { background: var(--bg-soft); }
 .fee-amount { font-weight: 700; color: var(--brand-dark); white-space: nowrap; }
-.paybill-card { background: var(--brand-deep); color: #e8f3fa; border-radius: var(--radius); padding: 26px; box-shadow: var(--shadow-lg); }
-.mpesa-badge { display: inline-block; background: #1fa855; color: #fff; font-weight: 800; font-size: .72rem; letter-spacing: .06em; padding: 4px 12px; border-radius: 999px; text-transform: uppercase; }
-.paybill-card h3 { color: #fff; margin: 12px 0 8px; }
-.paybill-box { background: rgba(255,255,255,.08); border-radius: var(--radius-sm); padding: 14px 16px; margin: 14px 0; display: grid; gap: 10px; }
-.paybill-row { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; align-items: baseline; }
-.paybill-label { font-size: .85rem; color: #b9d6e8; }
-.paybill-value { font-size: 1.5rem; font-weight: 700; color: var(--accent); letter-spacing: .04em; }
-.paybill-row .paybill-value.small { font-size: 1rem; color: #fff; letter-spacing: 0; font-weight: 500; text-align: right; }
-.paybill-card ol { padding-left: 1.2rem; display: grid; gap: 6px; font-size: .95rem; }
 .note { font-size: .9rem; color: var(--muted); margin-top: 14px; }
 
 /* ---------- Gallery ---------- */
@@ -539,3 +530,5 @@ textarea.form-control { min-height: 96px; resize: vertical; }
 .lightbox-video { width: 100%; align-items: center; justify-content: center; background: #000; }
 .lightbox-video video { max-height: 70vh; width: 100%; background: #000; }
 .lightbox-video iframe { width: 100%; aspect-ratio: 16 / 9; max-height: 70vh; border: 0; }
+
+.data-note { background: #eef7ee; border: 1px solid #b7dfb9; border-radius: 10px; padding: 12px 16px; margin: 0 0 18px; color: #1d5c2a; font-size: .98rem; }

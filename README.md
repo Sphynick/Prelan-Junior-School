@@ -1,6 +1,6 @@
-# Prelan Junior School — Website & Portals Deployment Guide
+# Prelan Junior School — Website Deployment Guide
 
-A complete, production-ready website, Admin Dashboard, and Parent Portal for **PRELAN JUNIOR SCHOOL**, located in Nyathuna, Ngecha, Kiambu County, Kenya, teaching the Kenyan Competency Based Curriculum (CBC: PP1 to Grade 6).
+A complete, production-ready website, and Admin Dashboard for **PRELAN JUNIOR SCHOOL**, teaching the Kenyan Competency Based Education (CBE) (CBE: PP1 to Grade 6).
 
 Built with plain HTML5, CSS3, and vanilla JavaScript (ES modules) using Firebase CDN (v10.12.2). **No Node.js build step or server required.**
 
@@ -14,9 +14,6 @@ Built with plain HTML5, CSS3, and vanilla JavaScript (ES modules) using Firebase
 ├── admin/
 │   ├── login.html          # Staff administrator login with password reset
 │   └── dashboard.html      # 10-tab administrative management system
-├── portal/
-│   ├── login.html          # Parent portal login (No public registration)
-│   └── home.html           # Parent portal: Learner profile, fees, M-Pesa receipts
 ├── css/
 │   └── styles.css          # Full design system (Deep green, Gold, Soft mint)
 ├── js/
@@ -25,8 +22,6 @@ Built with plain HTML5, CSS3, and vanilla JavaScript (ES modules) using Firebase
 │   ├── main.js             # Public website interactivity & live Firestore loader
 │   ├── admin-login.js      # Admin authentication & admins/{uid} document validator
 │   ├── admin-dashboard.js  # Admin controller (Secondary auth, 30m auto-logout)
-│   ├── portal-login.js     # Parent authentication & parents/{uid} document validator
-│   └── portal-home.js      # Parent dashboard controller
 ├── firestore.rules         # Cloud Firestore security rules
 ├── storage.rules           # Cloud Storage security rules (if Blaze plan used)
 ├── firebase.json           # Firebase CLI deployment configuration
@@ -115,7 +110,6 @@ Because there is **no public admin sign-up**, the first administrator account mu
 1. In the Firebase Console, click the gear icon ⚙️ next to **Project Overview** in the left sidebar and select **Project settings**.
 2. Under the **"General"** tab, scroll down to the **"Your apps"** section.
 3. Click the **Web icon `</>`** to register a web app.
-4. Enter App nickname: `Prelan Web Portal`.
 5. Check the box: *"Also set up Firebase Hosting for this app"*.
 6. Click **"Register app"**.
 7. Firebase will display your `firebaseConfig` object. Copy the values and open `js/firebase-config.js` in your text editor:
@@ -202,22 +196,5 @@ Before opening the site to parents, verify the following:
 - [x] **Admin Login Security:** Try logging in with an email that is in Firebase Auth but NOT in the `admins` collection. Verify the system shows *"Access denied: Account is not authorized as an administrator"* and signs out.
 - [x] **Admin Inactivity Auto-Logout:** Verify that after 30 minutes of inactivity, the dashboard auto-logs out to protect sensitive school data.
 - [x] **Owner Account Isolation:** Verify the "Admin Users" tab is visible **only** to the owner (`role: "owner"`), not to standard administrators.
-- [x] **Admin Stays Logged In During Parent Account Creation:** From the admin dashboard under **Parents & Learners**, create a parent account. Verify that the secondary Firebase app creates the parent credentials **without logging out the administrator**.
-- [x] **Parent Privacy Isolation:** Log in to `/portal/login.html` with the newly created parent account. Verify that the parent can only see their own child, their own fee balance, and their own M-Pesa receipts. Verify that parents cannot access `/admin/dashboard.html` or other parents' data.
-- [x] **Security Rules Enforced:** Verify that unauthenticated public visitors cannot read documents from `/visits`, `/subscribers`, `/parents`, or `/payments`.
 
 
----
-
-## Parent Google Sign-In / Sign-Up
-
-Parents can use **Continue with Google** on `/portal/login.html`.
-
-1. **Enable it once:** Firebase Console → Authentication → Sign-in method → **Google** → Enable → Save.
-2. **Authorised domains:** Authentication → Settings → Authorised domains. `localhost` is there by default; add your live domain (e.g. your Vercel domain).
-3. **Publish the updated `firestore.rules`** (it adds a `parentRequests` collection).
-
-How it works:
-- A parent who signs in with Google but is not yet linked to a learner sees a short form (phone, child's name, admission number) and sends an access request. A request gives **no access** to any data.
-- The admin sees it under **Admin → Parents → Pending Google sign-up requests** and clicks **Approve**, confirming the learner, grade and fee balance. That creates `parents/{uid}`; the parent signs in with Google again and lands in the portal.
-- A parent who already has a school-created password account and signs in with Google using the **same email** keeps the same account (same UID), so their learner and payment history stay linked.

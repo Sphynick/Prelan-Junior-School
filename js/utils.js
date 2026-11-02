@@ -279,6 +279,8 @@ export const APPLICATION_STATUSES = [
 ];
 
 const GRADE_OPTIONS = [
+  ["Creche", "Creche (age 2)"],
+  ["Reception", "Reception / Play Group (age 3)"],
   ["PP1", "Pre-Primary 1 (PP1 · age 4)"],
   ["PP2", "Pre-Primary 2 (PP2 · age 5)"],
   ["Grade 1", "Grade 1 (age 6)"],
@@ -286,7 +288,10 @@ const GRADE_OPTIONS = [
   ["Grade 3", "Grade 3 (age 8)"],
   ["Grade 4", "Grade 4 (age 9)"],
   ["Grade 5", "Grade 5 (age 10)"],
-  ["Grade 6", "Grade 6 (age 11)"]
+  ["Grade 6", "Grade 6 (age 11)"],
+  ["Grade 7", "Grade 7 (age 12)"],
+  ["Grade 8", "Grade 8 (age 13)"],
+  ["Grade 9", "Grade 9 (age 14)"]
 ];
 
 /**
@@ -306,7 +311,7 @@ const APP_FIELDS = {
   previousSchool: { label: "Previous school (if any)", ph: "Name of previous school" },
   lastClass:    { label: "Last class attended", ph: "e.g. Grade 2" },
   reasonLeaving:{ label: "Reason for leaving previous school", ph: "Optional" },
-  residence:    { label: "Home area / estate / village", ph: "e.g. Nyathuna, Ngecha", req: true },
+  residence:    { label: "Home area / estate / village", ph: "e.g. your estate, town or village", req: true },
   transport:    { label: "Needs school transport?", type: "select", options: [["No", "No"], ["Yes", "Yes"]], def: "No" },
   medical:      { label: "Allergies, medical conditions or medication", type: "textarea", ph: "Write 'None' if not applicable" },
   specialNeeds: { label: "Learning support or special needs", type: "textarea", ph: "Anything the teachers should know to support your child" },
@@ -315,7 +320,7 @@ const APP_FIELDS = {
   parentThird:  { label: "Parent / guardian third name", ph: "Third name (optional)" },
   relationship: { label: "Relationship to the learner", type: "select", options: [["Mother", "Mother"], ["Father", "Father"], ["Guardian", "Guardian"], ["Other", "Other"]], req: true },
   parentId:     { label: "National ID number", ph: "Optional" },
-  phone:        { label: "Phone number (M-Pesa / WhatsApp)", type: "tel", ph: "e.g. 0712 345 678", hint: "Kenyan format: 07XX / 01XX / +254", req: true, officeReq: true },
+  phone:        { label: "Phone number (WhatsApp / calls)", type: "tel", ph: "e.g. 0712 345 678", hint: "Kenyan format: 07XX / 01XX / +254", req: true, officeReq: true },
   altPhone:     { label: "Alternative phone", type: "tel", ph: "Optional" },
   email:        { label: "Email", type: "email", ph: "parent@example.com" },
   occupation:   { label: "Occupation", ph: "Optional" },

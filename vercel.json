@@ -1,4 +1,16 @@
 {
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/fees",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/fees.html",
+      "destination": "/",
+      "permanent": true
+    }
+  ]
 }

@@ -17,10 +17,6 @@ service cloud.firestore {
         get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role == 'owner';
     }
 
-    function isParent(userId) {
-      return isAuthenticated() && request.auth.uid == userId;
-    }
-
     // 1. Admins Collection:
     // Admins can read all admin records. Any signed-in user can read ONLY their own record
     // (needed so the login page can check whether they are an admin).
@@ -28,32 +24,6 @@ service cloud.firestore {
     match /admins/{adminId} {
       allow read: if isAdmin() || (isAuthenticated() && request.auth.uid == adminId);
       allow write: if isOwner();
-    }
-
-    // 2. Parents Collection:
-    // Parents can read only their own profile. Admins can read and write all parents.
-    match /parents/{parentId} {
-      allow read: if isAdmin() || isParent(parentId);
-      allow write: if isAdmin();
-    }
-
-    // 2b. Parent Access Requests (Google sign-up):
-    // A signed-in parent may create/read/update ONLY their own request, and only with a
-    // verified email. Requests grant NO access to any data; an admin must approve one
-    // (which creates parents/{uid}). Only admins can delete requests.
-    match /parentRequests/{requestId} {
-      allow read: if isAdmin() || isParent(requestId);
-      allow create, update: if isParent(requestId)
-                            && request.auth.token.email_verified == true
-                            && request.resource.data.keys().hasOnly(['name', 'email', 'phone', 'childName', 'admNo', 'status', 'createdAt'])
-                            && request.resource.data.status == 'pending'
-                            && request.resource.data.email == request.auth.token.email
-                            && request.resource.data.name is string && request.resource.data.name.size() <= 100
-                            && request.resource.data.phone is string && request.resource.data.phone.size() <= 30
-                            && request.resource.data.childName is string && request.resource.data.childName.size() > 0
-                            && request.resource.data.childName.size() <= 100
-                            && request.resource.data.admNo is string && request.resource.data.admNo.size() <= 40;
-      allow delete: if isAdmin();
     }
 
     // 3. Visits & Applications Collection:
@@ -122,14 +92,6 @@ service cloud.firestore {
                     && request.resource.data.email.size() <= 120;
     }
 
-    // 5. Payments Collection:
-    // Admins can read, create, update, delete all payments.
-    // A parent can only read payments where parentUid == their own auth uid.
-    match /payments/{paymentId} {
-      allow read: if isAdmin() || (isAuthenticated() && resource.data.parentUid == request.auth.uid);
-      allow write: if isAdmin();
-    }
-
     // 6. News & Posts Collection:
     // Public can read published posts. Admins have full access.
     match /news/{newsId} {
@@ -152,25 +114,9 @@ service cloud.firestore {
     }
 
     // 9. Reviews Collection:
-    // Public can read only approved reviews.
-    // Public can CREATE a review with approved == false (pending admin review).
-    // Admins have full access.
+    // Public can read only approved reviews. Only admins can create, edit or delete them.
     match /reviews/{reviewId} {
       allow read: if resource.data.approved == true || isAdmin();
-      allow create: if request.resource.data.approved == false
-                    && request.resource.data.author is string
-                    && request.resource.data.author.size() > 0
-                    && request.resource.data.author.size() <= 100
-                    && request.resource.data.content is string
-                    && request.resource.data.content.size() > 0
-                    && request.resource.data.content.size() <= 1500;
-      allow update, delete: if isAdmin();
-    }
-
-    // 10. Fees & Paybill:
-    // Public can read. Admins can update.
-    match /fees/{docId} {
-      allow read: if true;
       allow write: if isAdmin();
     }
 

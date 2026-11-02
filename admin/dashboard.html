@@ -35,7 +35,7 @@
         <img src="/assets/images/prelan_logo.svg" alt="Prelan Junior School" style="width: 48px; height: 34px; object-fit: contain; border-radius: 4px; flex-shrink: 0; background: #fff; padding: 2px;">
         <div>
           <div class="sidebar-brand-name">PRELAN ADMIN</div>
-          <div style="font-size: 0.75rem; color: var(--color-gold);">Nyathuna, Ngecha</div>
+          <div style="font-size: 0.75rem; color: var(--color-gold);">Soaring to Excellence</div>
         </div>
       </div>
 
@@ -55,18 +55,6 @@
         <button type="button" class="sidebar-tab-btn" data-tab="tab-gallery">
           <span class="sidebar-tab-icon">🖼️</span>
           <span>Campus Gallery</span>
-        </button>
-        <button type="button" class="sidebar-tab-btn" data-tab="tab-fees">
-          <span class="sidebar-tab-icon">💰</span>
-          <span>Fees & Paybill</span>
-        </button>
-        <button type="button" class="sidebar-tab-btn" data-tab="tab-parents">
-          <span class="sidebar-tab-icon">👨‍👩‍👦</span>
-          <span>Parents & Learners</span>
-        </button>
-        <button type="button" class="sidebar-tab-btn" data-tab="tab-payments">
-          <span class="sidebar-tab-icon">💳</span>
-          <span>Fee Payments (M-Pesa)</span>
         </button>
         <!-- Owner Only Tab -->
         <button type="button" class="sidebar-tab-btn" id="tab-btn-admins" data-tab="tab-admins" style="display: none;">
@@ -256,147 +244,6 @@
             </div>
           </div>
         </section>
-
-        <!-- ==================================================================
-             TAB 4: FEES & PAYBILL
-             ================================================================== -->
-        <section id="tab-fees" class="tab-panel">
-          <div class="panel-card">
-            <div class="panel-header">
-              <h2 class="panel-title">M-Pesa Paybill Settings</h2>
-              <button type="button" id="save-paybill-btn" class="btn btn-sm btn-primary">Save Paybill Changes</button>
-            </div>
-
-            <div class="form-grid form-grid-2" style="margin-bottom: 2rem;">
-              <div class="form-group">
-                <label for="admin-pb-number" class="form-label">Business / Paybill Number</label>
-                <input type="text" id="admin-pb-number" class="form-control" placeholder="000000">
-              </div>
-              <div class="form-group">
-                <label for="admin-pb-account" class="form-label">Account Format Instruction</label>
-                <input type="text" id="admin-pb-account" class="form-control" placeholder="Learner Adm No. / Name">
-              </div>
-              <div class="form-group">
-                <label for="admin-pb-name" class="form-label">Official Registered Account Name</label>
-                <input type="text" id="admin-pb-name" class="form-control" placeholder="Prelan Junior School">
-              </div>
-            </div>
-
-            <div class="panel-header" style="border-top: 1px solid var(--color-slate-200); padding-top: 1.5rem;">
-              <h2 class="panel-title">Termly Fees Structure Table (KES)</h2>
-              <button type="button" id="save-fees-table-btn" class="btn btn-sm btn-primary">Save Fees Table</button>
-            </div>
-
-            <p style="font-size: 0.85rem; color: var(--color-slate-500); margin-bottom: 1rem;">
-              Edit termly figures. Use placeholders like <code>____</code> if figures are pending confirmation.
-            </p>
-
-            <div class="table-responsive">
-              <table class="fees-table">
-                <thead>
-                  <tr>
-                    <th>Programme Level</th>
-                    <th>Grades</th>
-                    <th>Termly Tuition (KES)</th>
-                    <th>Meals & Inclusions</th>
-                  </tr>
-                </thead>
-                <tbody id="admin-fees-tbody">
-                  <!-- Rendered via JS -->
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
-        <!-- ==================================================================
-             TAB 8: PARENTS & LEARNERS
-             ================================================================== -->
-        <section id="tab-parents" class="tab-panel">
-          <div class="panel-card">
-            <div class="panel-header">
-              <div>
-                <h2 class="panel-title">Parents & Registered Learners</h2>
-                <p style="font-size: 0.85rem; color: var(--color-slate-500);">
-                  Parents can request access by signing in with Google. Approve their request below, or create an account for them manually.
-                </p>
-              </div>
-              <button type="button" id="open-new-parent-btn" class="btn btn-sm btn-primary">+ Create Parent Account</button>
-            </div>
-
-            <!-- Pending Google sign-up requests (rendered via JS) -->
-            <div id="parent-requests-panel" style="display: none; margin-bottom: 1.5rem; padding: 1rem; border: 1px solid #fde68a; background: #fffbeb; border-radius: var(--radius-md);">
-              <h3 style="font-size: 1.05rem; color: var(--color-primary-dark); margin-bottom: 0.25rem;">Pending Google sign-up requests</h3>
-              <p style="font-size: 0.8rem; color: var(--color-slate-500); margin-bottom: 0.75rem;">Check each request against your admission records before approving.</p>
-              <div class="table-responsive">
-                <table class="fees-table">
-                  <thead>
-                    <tr><th>Parent</th><th>Email</th><th>Phone</th><th>Child / Adm No.</th><th>Actions</th></tr>
-                  </thead>
-                  <tbody id="parent-requests-body"></tbody>
-                </table>
-              </div>
-            </div>
-
-            <div class="table-responsive">
-              <table class="fees-table">
-                <thead>
-                  <tr>
-                    <th>Parent Name</th>
-                    <th>Email (Login)</th>
-                    <th>Phone</th>
-                    <th>Linked Learner(s) & Grade</th>
-                    <th>Fee Balance</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="parents-table-body">
-                  <!-- Rendered via JS -->
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
-        <!-- ==================================================================
-             TAB 9: FEE PAYMENTS (M-PESA)
-             ================================================================== -->
-        <section id="tab-payments" class="tab-panel">
-          <div class="panel-card">
-            <div class="panel-header">
-              <div>
-                <h2 class="panel-title">Fee Payments & M-Pesa Entries</h2>
-                <p style="font-size: 0.85rem; color: var(--color-slate-500);">
-                  Manual payment entries verified by administration. Auto-updates parent balance.
-                </p>
-              </div>
-              <div class="table-toolbar">
-                <button type="button" id="open-record-payment-btn" class="btn btn-sm btn-primary">+ Record Payment</button>
-                <button type="button" id="export-payments-csv-btn" class="btn btn-sm btn-outline">Export CSV</button>
-              </div>
-            </div>
-
-            <div class="table-responsive">
-              <table class="fees-table">
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>M-Pesa Reference</th>
-                    <th>Parent / Learner</th>
-                    <th>Term</th>
-                    <th>Amount (KES)</th>
-                    <th>Notes</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="payments-table-body">
-                  <!-- Rendered via JS -->
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
         <!-- ==================================================================
              TAB 10: ADMIN USERS (OWNER ONLY)
              ================================================================== -->
@@ -483,7 +330,6 @@
             <label class="form-label">Quick actions</label>
             <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
               <button type="button" id="print-application-btn" class="btn btn-sm btn-outline">Print form</button>
-              <button type="button" id="application-to-parent-btn" class="btn btn-sm btn-outline">Create parent account</button>
             </div>
           </div>
         </div>
@@ -633,172 +479,7 @@
       </form>
     </div>
   </div>
-
-  <!-- Modal: Create Parent Account (Uses Secondary Auth Instance) -->
-  <div class="modal-overlay" id="modal-parent">
-    <div class="modal-card">
-      <button type="button" class="modal-close-btn" data-close-modal>&times;</button>
-      <h3 style="font-size: 1.35rem; color: var(--color-primary-dark); margin-bottom: 0.5rem;">Create Parent Portal Account</h3>
-      <p style="font-size: 0.85rem; color: var(--color-slate-500); margin-bottom: 1.25rem;">
-        Creates a secure Firebase Auth credential for the parent and links their child's details. Admin remains logged in.
-      </p>
-
-      <form id="create-parent-form">
-        <div class="form-grid form-grid-2" style="margin-bottom: 1rem;">
-          <div class="form-group">
-            <label for="parent-name" class="form-label">Parent / Guardian Name *</label>
-            <input type="text" id="parent-name" class="form-control" required placeholder="e.g. Grace Wanjiru">
-          </div>
-          <div class="form-group">
-            <label for="parent-phone" class="form-label">Phone Number *</label>
-            <input type="tel" id="parent-phone" class="form-control" required placeholder="0712 345 678">
-          </div>
-        </div>
-
-        <div class="form-grid form-grid-2" style="margin-bottom: 1rem;">
-          <div class="form-group">
-            <label for="parent-email" class="form-label">Login Email *</label>
-            <input type="email" id="parent-email" class="form-control" required placeholder="parent@example.com">
-          </div>
-          <div class="form-group">
-            <label for="parent-temp-pass" class="form-label">Temporary Password *</label>
-            <input type="text" id="parent-temp-pass" class="form-control" required value="Prelan2025#" placeholder="At least 6 characters">
-          </div>
-        </div>
-
-        <div style="border-top: 1px solid var(--color-slate-200); padding-top: 1rem; margin-top: 1rem;">
-          <h4 style="font-size: 1rem; color: var(--color-primary-dark); margin-bottom: 0.75rem;">Learner / Child Details</h4>
-          
-          <div class="form-grid form-grid-2" style="margin-bottom: 1rem;">
-            <div class="form-group">
-              <label for="learner-name" class="form-label">Learner's Full Name *</label>
-              <input type="text" id="learner-name" class="form-control" required placeholder="e.g. Kevin Kamau">
-            </div>
-            <div class="form-group">
-              <label for="learner-adm" class="form-label">Admission Number *</label>
-              <input type="text" id="learner-adm" class="form-control" required placeholder="e.g. PJS/2025/082">
-            </div>
-          </div>
-
-          <div class="form-grid form-grid-2" style="margin-bottom: 1rem;">
-            <div class="form-group">
-              <label for="learner-grade" class="form-label">Grade / Class *</label>
-              <select id="learner-grade" class="form-control" required>
-                <option value="PP1">Pre-Primary 1 (PP1)</option>
-                <option value="PP2">Pre-Primary 2 (PP2)</option>
-                <option value="Grade 1">Grade 1</option>
-                <option value="Grade 2">Grade 2</option>
-                <option value="Grade 3">Grade 3</option>
-                <option value="Grade 4">Grade 4</option>
-                <option value="Grade 5">Grade 5</option>
-                <option value="Grade 6">Grade 6</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="initial-balance" class="form-label">Initial Term Fee Balance (KES)</label>
-              <input type="number" id="initial-balance" class="form-control" value="0">
-            </div>
-          </div>
-        </div>
-
-        <button type="submit" id="create-parent-submit-btn" class="btn btn-primary btn-block" style="margin-top: 1rem;">
-          Create Parent Account
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal: Approve Parent Google Request -->
-  <div class="modal-overlay" id="modal-approve-parent">
-    <div class="modal-card">
-      <button type="button" class="modal-close-btn" data-close-modal>&times;</button>
-      <h3 style="font-size: 1.35rem; color: var(--color-primary-dark); margin-bottom: 0.5rem;">Approve Parent Access</h3>
-      <p id="approve-parent-summary" style="font-size: 0.85rem; color: var(--color-slate-500); margin-bottom: 1.25rem;"></p>
-      <form id="approve-parent-form">
-        <div class="form-grid form-grid-2" style="margin-bottom: 1rem;">
-          <div class="form-group">
-            <label for="approve-learner-name" class="form-label">Learner's Full Name *</label>
-            <input type="text" id="approve-learner-name" class="form-control" required>
-          </div>
-          <div class="form-group">
-            <label for="approve-learner-adm" class="form-label">Admission Number *</label>
-            <input type="text" id="approve-learner-adm" class="form-control" required placeholder="e.g. PJS/2025/082">
-          </div>
-        </div>
-        <div class="form-grid form-grid-2" style="margin-bottom: 1rem;">
-          <div class="form-group">
-            <label for="approve-learner-grade" class="form-label">Grade / Class *</label>
-            <select id="approve-learner-grade" class="form-control" required>
-              <option value="PP1">Pre-Primary 1 (PP1)</option>
-              <option value="PP2">Pre-Primary 2 (PP2)</option>
-              <option value="Grade 1">Grade 1</option>
-              <option value="Grade 2">Grade 2</option>
-              <option value="Grade 3">Grade 3</option>
-              <option value="Grade 4">Grade 4</option>
-              <option value="Grade 5">Grade 5</option>
-              <option value="Grade 6">Grade 6</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="approve-balance" class="form-label">Initial Term Fee Balance (KES)</label>
-            <input type="number" id="approve-balance" class="form-control" value="0">
-          </div>
-        </div>
-        <button type="submit" id="approve-parent-submit-btn" class="btn btn-primary btn-block">Approve &amp; Activate Portal Access</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal: Record Payment -->
-  <div class="modal-overlay" id="modal-payment">
-    <div class="modal-card">
-      <button type="button" class="modal-close-btn" data-close-modal>&times;</button>
-      <h3 style="font-size: 1.35rem; color: var(--color-primary-dark); margin-bottom: 1rem;">Record Fee Payment</h3>
-
-      <form id="record-payment-form">
-        <div class="form-group" style="margin-bottom: 1rem;">
-          <label for="pay-parent-select" class="form-label">Select Parent / Learner *</label>
-          <select id="pay-parent-select" class="form-control" required>
-            <option value="" disabled selected>Select Parent</option>
-          </select>
-        </div>
-
-        <div class="form-grid form-grid-2" style="margin-bottom: 1rem;">
-          <div class="form-group">
-            <label for="pay-amount" class="form-label">Amount Paid (KES) *</label>
-            <input type="number" id="pay-amount" class="form-control" required min="1" placeholder="e.g. 15000">
-          </div>
-          <div class="form-group">
-            <label for="pay-mpesa-ref" class="form-label">M-Pesa Reference / Code *</label>
-            <input type="text" id="pay-mpesa-ref" class="form-control" required placeholder="e.g. QK892HY1KL">
-          </div>
-        </div>
-
-        <div class="form-grid form-grid-2" style="margin-bottom: 1rem;">
-          <div class="form-group">
-            <label for="pay-date" class="form-label">Payment Date *</label>
-            <input type="date" id="pay-date" class="form-control" required>
-          </div>
-          <div class="form-group">
-            <label for="pay-term" class="form-label">Academic Term</label>
-            <select id="pay-term" class="form-control">
-              <option value="Term 1 2025">Term 1 2025</option>
-              <option value="Term 2 2025">Term 2 2025</option>
-              <option value="Term 3 2025">Term 3 2025</option>
-              <option value="Term 1 2026">Term 1 2026</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-group" style="margin-bottom: 1.5rem;">
-          <label for="pay-notes" class="form-label">Notes / Receipt Description</label>
-          <input type="text" id="pay-notes" class="form-control" placeholder="Tuition fee instalment / Transport">
-        </div>
-
-        <button type="submit" id="save-payment-submit-btn" class="btn btn-primary btn-block">Record Payment & Update Balance</button>
-      </form>
-    </div>
-  </div>
+  
 
   <!-- Modal: Create New Admin (Owner Only) -->
   <div class="modal-overlay" id="modal-admin">
