@@ -57,7 +57,7 @@ const FALLBACK_SETTINGS = {
   heroTitle: "Nurturing Every Learner's Potential Through CBE Excellence",
   heroSubtitle: "Prelan Junior School provides a grounded, supportive environment where learners build real-life competencies, strong character, and a lifelong passion for discovery.",
   admissionBannerOpen: true,
-  admissionBannerText: "Enrolment for Academic Year 2026/2027 is currently ongoing for Creche through Grade 9.",
+  admissionBannerText: "Registration for the 2027 academic year is now open for Nursery through Grade 9.",
 };
 
 
@@ -70,10 +70,15 @@ const SITE_VIDEOS = [
 
 const FALLBACK_GALLERY = [
   { title: "Our Colourful School Compound", category: "Grounds", imageUrl: "/assets/images/gallery-campus.jpg" },
+  { title: "School Buses: Soaring to Excellence", category: "Grounds", imageUrl: "/assets/images/gallery-buses.jpg" },
   { title: "Kindergarten Rest Time", category: "Classrooms", imageUrl: "/assets/images/gallery-nap.jpg" },
+  { title: "Music Lessons for Our Youngest Learners", category: "Clubs", imageUrl: "/assets/images/gallery-toddler.jpg" },
   { title: "Music & Instrumental Training", category: "Clubs", imageUrl: "/assets/images/gallery-music-keyboard.jpg" },
+  { title: "Ballet Club", category: "Clubs", imageUrl: "/assets/images/gallery-ballet.jpg" },
   { title: "Home Science Club: Young Taste Masters", category: "Clubs", imageUrl: "/assets/images/gallery-cooking.jpg" },
   { title: "Young Taste Masters Team", category: "Clubs", imageUrl: "/assets/images/gallery-tastemasters.jpg" },
+  { title: "Tree Planting Day", category: "Clubs", imageUrl: "/assets/images/gallery-planting.jpg" },
+  { title: "Cultural Day", category: "Events", imageUrl: "/assets/images/gallery-cultural.jpg" },
   { title: "Career Day: Our Little Pilots", category: "Events", imageUrl: "/assets/images/gallery-pilots.jpg" },
   { title: "Kindergarten Graduation 2026", category: "Events", imageUrl: "/assets/images/gallery-graduation.jpg" }
 ];
@@ -133,7 +138,7 @@ const FALLBACK_NEWS = [
     title: "Junior Environmental & 4-K Club Tree Planting Day",
     date: "Recent Event",
     summary: "Our learners participated in an exciting environmental conservation project cultivating indigenous tree seedlings within our campus gardens.",
-    imageUrl: "/assets/images/campus-1200.jpg"
+    imageUrl: "/assets/images/planting-1200.jpg"
   },
   {
     title: "Upcoming Academic Clinic & Parent Consultation",
