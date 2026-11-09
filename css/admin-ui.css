@@ -1,0 +1,73 @@
+/* ==========================================================================
+   PRELAN ADMIN UI — brown & cream, fully responsive (phone → desktop)
+   Loads AFTER styles.css on admin/dashboard.html and admin/login.html
+   ========================================================================== */
+:root {
+  --color-primary: #6b4428;
+  --color-primary-dark: #3b2412;
+  --color-primary-light: #8a5a36;
+  --color-gold: #f4d36a;
+  --color-gold-hover: #e2b93f;
+  --color-gold-light: #fff6d6;
+  --color-mint: #fbf3d9;
+  --color-mint-subtle: #fffaf0;
+  --color-mint-border: #eadfc4;
+  --shadow-card: 0 12px 24px -6px rgba(70,40,15,.10), 0 4px 8px -2px rgba(70,40,15,.05);
+}
+html { -webkit-text-size-adjust: 100%; }
+body { overflow-x: hidden; }
+.dashboard-shell { background: #fbf8f1; }
+.toast.toast-success { background: #3b2412; }
+
+/* ---- Sidebar ---- */
+.dashboard-sidebar { position: sticky; top: 0; height: 100vh; height: 100dvh; overflow-y: auto; overscroll-behavior: contain; }
+.sidebar-nav { overflow-y: auto; flex: 1; }
+.sidebar-tab-btn { width: 100%; text-align: left; min-height: 44px; }
+.sidebar-tab-btn.active { background: rgba(244,211,106,.16); box-shadow: inset 3px 0 0 var(--color-gold); }
+.admin-backdrop { position: fixed; inset: 0; background: rgba(20,10,4,.55); opacity: 0; visibility: hidden; transition: opacity .25s, visibility .25s; z-index: 90; }
+.admin-backdrop.show { opacity: 1; visibility: visible; }
+
+/* ---- Top bar ---- */
+.dashboard-topbar { position: sticky; top: 0; z-index: 80; }
+.mobile-toggle { display: none; min-width: 44px; min-height: 44px; border-radius: 10px; border: 1px solid var(--color-mint-border); background: #fff; font-size: 1.25rem; }
+.dashboard-content { max-width: 1400px; width: 100%; margin-inline: auto; }
+
+/* ---- Content ---- */
+.panel-card { overflow: hidden; }
+.table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-inline: -4px; padding-inline: 4px; }
+.fees-table { min-width: 560px; }
+.table-toolbar { width: 100%; }
+.table-toolbar .search-input, .table-toolbar select { flex: 1 1 180px; min-width: 0; }
+.form-control, .search-input, select, textarea { max-width: 100%; font-size: 16px; } /* 16px stops iOS zoom */
+.btn, .sidebar-tab-btn { touch-action: manipulation; }
+
+/* Extras lists (slides / learners / reviews) */
+#slides-list > div, #learners-list > div, #reviews-list > div { border-radius: 12px; }
+#slides-list img { flex: 0 0 auto; }
+
+@media (max-width: 991px) {
+  .mobile-toggle { display: inline-flex; align-items: center; justify-content: center; }
+  .dashboard-sidebar { position: fixed; top: 0; bottom: 0; left: 0; width: min(300px, 86vw); transform: translateX(-102%); transition: transform .28s ease; z-index: 100; box-shadow: none; }
+  .dashboard-sidebar.open { transform: translateX(0); box-shadow: 0 0 40px rgba(0,0,0,.4); }
+  body.admin-nav-open { overflow: hidden; }
+  .dashboard-topbar { padding: .75rem 1rem; }
+  .dashboard-content { padding: 1.25rem 1rem; }
+}
+@media (max-width: 640px) {
+  .dashboard-content { padding: 1rem .75rem; }
+  .panel-card { padding: 1rem; border-radius: 16px; margin-bottom: 1rem; }
+  .panel-header { flex-direction: column; align-items: stretch; gap: .75rem; margin-bottom: 1rem; }
+  .panel-header .btn, .table-toolbar .btn { width: 100%; justify-content: center; }
+  .panel-title { font-size: 1.15rem; }
+  .stats-row { grid-template-columns: 1fr 1fr; gap: .75rem; }
+  .metric-card { padding: .9rem; } .metric-number { font-size: 1.4rem; }
+  .modal-overlay { padding: 0; align-items: flex-end; }
+  .modal-card { max-width: 100%; max-height: 94dvh; border-radius: 20px 20px 0 0; padding: 1.25rem 1rem 1.5rem; }
+  #toast-container { left: 12px; right: 12px; bottom: 12px; }
+  .toast { min-width: 0; max-width: none; }
+  #slides-list > div > div:last-child { width: 100%; }
+  #slides-list > div > img { width: 100% !important; height: auto !important; aspect-ratio: 16/9; }
+  .btn-sm { padding: .55rem .8rem; }
+}
+@media (min-width: 1400px) { .dashboard-content { padding: 2.5rem; } }
+@media (prefers-reduced-motion: reduce) { .dashboard-sidebar, .admin-backdrop { transition: none; } }

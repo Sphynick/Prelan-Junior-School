@@ -1,6 +1,6 @@
 # Prelan Junior School — Website Deployment Guide
 
-A complete, production-ready website, and Admin Dashboard for **PRELAN JUNIOR SCHOOL**, teaching the Kenyan Competency Based Education (CBE) (CBE: PP1 to Grade 6).
+A complete, production-ready website, and Admin Dashboard for **PRELAN JUNIOR SCHOOL**, teaching the Kenyan Competency Based Education (CBE) (Crèche, Reception/Playgroup, Grades 1 to 9).
 
 Built with plain HTML5, CSS3, and vanilla JavaScript (ES modules) using Firebase CDN (v10.12.2). **No Node.js build step or server required.**
 
@@ -15,7 +15,7 @@ Built with plain HTML5, CSS3, and vanilla JavaScript (ES modules) using Firebase
 │   ├── login.html          # Staff administrator login with password reset
 │   └── dashboard.html      # 10-tab administrative management system
 ├── css/
-│   └── styles.css          # Full design system (Deep green, Gold, Soft mint)
+│   └── styles.css          # Full design system (Brown and cream yellow (see css/prelan-theme.css))
 ├── js/
 │   ├── firebase-config.js  # Centralized Firebase configuration & storage flag
 │   ├── utils.js            # Kenyan phone validation, Base64 compression, CSV export
@@ -198,3 +198,17 @@ Before opening the site to parents, verify the following:
 - [x] **Owner Account Isolation:** Verify the "Admin Users" tab is visible **only** to the owner (`role: "owner"`), not to standard administrators.
 
 
+
+
+---
+
+## 12. November 2026 redesign: new features & one-time setup
+
+**New files:** `css/prelan-theme.css` (brown & cream theme), `js/home.js` (hero slider), `portal.html` + `js/portal.js` (Parent Portal), `js/admin-extras.js` (Slides / Learners / Reviews / Settings tabs).
+
+1. **Enable sign-in methods:** Firebase Console > Authentication > Sign-in method > enable **Google** AND **Email/Password**. Email/password parents must verify their email (a link is sent automatically) before they can see child details or post a review.
+2. **Authorised domains:** Authentication > Settings > Authorised domains > add `prelanschools.com` and `www.prelanschools.com`.
+3. **Publish `firestore.rules`** again (new `slides`, `children`, and parent-owned `reviews` rules).
+4. **Slides:** Admin > Homepage Slides. Until you add one, built-in default slides show.
+5. **Learners:** Admin > Learners. A parent sees a child only when the Google email matches the "Parent Google email" saved there.
+6. **Reviews:** parents submit from the Parent Portal; approve them in Admin > Parent Reviews. Editing a published review sends it back to Pending.

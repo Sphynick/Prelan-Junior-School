@@ -1090,9 +1090,9 @@ async function deleteGalleryPhoto(id) {
    4. FEES & PAYBILL
    ========================================================================== */
 const DEFAULT_FEES_ROWS = [
-  { level: "Pre-Primary", grades: "PP1 & PP2", amount: "____", meals: "Snacks & Hot Lunch" },
-  { level: "Lower Primary", grades: "Grades 1 – 3", amount: "____", meals: "Snacks & Hot Lunch" },
-  { level: "Upper Primary", grades: "Grades 4 – 6", amount: "____", meals: "Snacks & Hot Lunch" }
+  { level: "Kindergarten", grades: "Crèche & Reception / Playgroup", amount: "", meals: "" },
+  { level: "Primary", grades: "Grades 1 – 6", amount: "", meals: "" },
+  { level: "Junior Secondary", grades: "Grades 7 – 9", amount: "", meals: "" }
 ];
 
 /* ==========================================================================

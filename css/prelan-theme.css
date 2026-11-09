@@ -1,0 +1,273 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Questrial&display=swap");
+/* ==========================================================================
+   PRELAN — BROWN & CREAM THEME  (loads AFTER site.css)
+   Recolours the whole site and adds the Woodcreek-style homepage parts:
+   full-bleed slider, welcome block, clubs/facilities chips, video band.
+   To tweak the brand, change only the variables below.
+   ========================================================================== */
+:root {
+  --brand: #6b4428;        /* Prelan brown */
+  --brand-dark: #51321b;
+  --brand-deep: #33200f;
+  --brand-soft: #fbf3d9;   /* cream */
+  --accent: #f4d36a;       /* cream yellow */
+  --accent-dark: #e2b93f;
+  --cream: #fff9e6;
+  --cream-2: #fbf3d9;
+  --bg-soft: #fdf8ea;
+  --line: #eadfc4;
+  --ink: #2a1a0e;
+  --text: #4a3a2c;
+  --muted: #7a6a58;
+  --footer: #2b1a0d;
+  --shadow: 0 6px 22px rgba(70, 40, 15, .09);
+  --shadow-lg: 0 14px 40px rgba(70, 40, 15, .18);
+  --font-head: "Lora", Georgia, serif;
+}
+body { background: #fff; }
+.announce { background: var(--brand-deep); color: var(--cream); }
+.announce a { color: var(--accent); }
+.btn-accent { background: var(--accent); color: var(--brand-deep); }
+.btn-accent:hover { background: var(--accent-dark); text-decoration: none; }
+.btn-ghost-dark { border: 1.5px solid var(--brand); color: var(--brand); background: transparent; }
+.btn-ghost-dark:hover { background: var(--brand); color: #fff; text-decoration: none; }
+.top-portal { display: none; }
+@media (min-width: 900px) { .top-portal { display: inline-flex; } }
+.mainnav { background: var(--brand); }
+.site-footer { background: var(--footer); }
+.section--soft { background: var(--bg-soft); }
+.section--brand { background: linear-gradient(135deg, var(--brand-dark), var(--brand)); color: var(--cream); }
+.section--brand h2, .section--brand h3 { color: #fff; }
+.eyebrow { color: var(--accent-dark); letter-spacing: .14em; text-transform: uppercase; font-size: .78rem; font-weight: 700; }
+
+/* ---------- HERO SLIDER (Woodcreek-style full-bleed) ---------- */
+.slider { position: relative; background: var(--brand-deep); overflow: hidden; }
+.slider-track { position: relative; height: clamp(360px, 62vw, 640px); overflow: hidden; }
+.slider-strip { display: flex; height: 100%; will-change: transform; }
+.slide { position: relative; flex: 0 0 100%; height: 100%; overflow: hidden; }
+.slide > img { width: 100%; height: 100%; object-fit: cover; user-select: none; }
+.slide::after { content: ""; position: absolute; inset: 0;
+  background: linear-gradient(90deg, rgba(51,32,15,.78) 0%, rgba(51,32,15,.35) 55%, rgba(51,32,15,0) 100%); }
+.slide-caption { position: absolute; z-index: 2; inset: 0; display: flex; align-items: center; }
+.slide-caption .container > div { max-width: 600px; color: #fff; opacity: 0; transform: translateY(18px); transition: opacity .7s .45s, transform .7s .45s; }
+.slide.is-active .slide-caption .container > div { opacity: 1; transform: none; }
+.slide-caption h2, .slide-caption h1 { color: #fff; font-size: clamp(1.7rem, 4.6vw, 3.1rem); text-shadow: 0 2px 14px rgba(0,0,0,.35); }
+.slide-caption p { font-size: clamp(1rem, 1.8vw, 1.2rem); color: var(--cream); margin-bottom: 1.2em; }
+.slide-kicker { display: inline-block; background: var(--accent); color: var(--brand-deep); font-weight: 700; font-size: .78rem;
+  letter-spacing: .1em; text-transform: uppercase; padding: 5px 12px; border-radius: 999px; margin-bottom: 14px; }
+.slider-btn { position: absolute; top: 50%; z-index: 3; width: 46px; height: 46px; margin-top: -23px; border-radius: 50%;
+  border: 0; background: rgba(255,249,230,.88); color: var(--brand-deep); font-size: 1.4rem; line-height: 1; box-shadow: var(--shadow); }
+.slider-btn:hover { background: var(--accent); }
+.slider-btn.prev { left: 14px; } .slider-btn.next { right: 14px; }
+.slider-dots { position: absolute; z-index: 3; left: 0; right: 0; bottom: 16px; display: flex; justify-content: center; gap: 8px; }
+.slider-dots button { width: 11px; height: 11px; border-radius: 50%; border: 0; padding: 0; background: rgba(255,249,230,.55); }
+.slider-dots button[aria-current="true"] { background: var(--accent); width: 28px; border-radius: 8px; }
+.slider-sticker { position: absolute; z-index: 3; right: clamp(12px, 4vw, 48px); bottom: 34px; width: clamp(84px, 12vw, 140px); filter: drop-shadow(0 6px 12px rgba(0,0,0,.35)); }
+@media (max-width: 640px) { .slider-btn { display: none; } .slide::after { background: linear-gradient(0deg, rgba(51,32,15,.85), rgba(51,32,15,.25)); } .slide-caption { align-items: flex-end; padding-bottom: 46px; } }
+
+
+/* ---------- Welcome block ---------- */
+.welcome { padding-block: clamp(40px, 7vw, 84px); }
+.welcome-grid { display: grid; gap: 36px; grid-template-columns: 1fr; align-items: center; }
+@media (min-width: 900px) { .welcome-grid { grid-template-columns: 1.1fr .9fr; } }
+.welcome h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
+.welcome-media { position: relative; }
+.welcome-media img { border-radius: 18px; box-shadow: var(--shadow-lg); width: 100%; aspect-ratio: 4/3; object-fit: cover; }
+.welcome-media::before { content: ""; position: absolute; inset: 18px -14px -14px 18px; border-radius: 18px; background: var(--accent); z-index: -1; opacity: .7; }
+
+/* ---------- Curriculum / Mission / Vision ---------- */
+.mv-grid { display: grid; gap: 22px; grid-template-columns: 1fr; }
+@media (min-width: 800px) { .mv-grid { grid-template-columns: repeat(3, 1fr); } }
+.mv-card { background: #fff; border: 1px solid var(--line); border-top: 4px solid var(--accent); border-radius: 14px; padding: 26px; box-shadow: var(--shadow); }
+.mv-card h3 { color: var(--brand); }
+
+/* ---------- Tiers ---------- */
+.tier-grid { display: grid; gap: 24px; grid-template-columns: 1fr; }
+@media (min-width: 800px) { .tier-grid { grid-template-columns: repeat(3, 1fr); } }
+.tier { position: relative; display: flex; flex-direction: column; background: #fff; border-radius: 18px; overflow: hidden; box-shadow: var(--shadow); border: 1px solid var(--line); transition: transform .25s, box-shadow .25s; }
+.tier:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); text-decoration: none; }
+.tier img { width: 100%; aspect-ratio: 16/11; object-fit: cover; }
+.tier-body { padding: 22px; flex: 1; }
+.tier-body h3 { margin-bottom: .25em; color: var(--brand); }
+.tier-body ul { list-style: none; margin: .6em 0 0; }
+.tier-body li { padding: 5px 0 5px 22px; position: relative; color: var(--text); }
+.tier-body li::before { content: "✦"; position: absolute; left: 0; color: var(--accent-dark); font-size: .8rem; top: 8px; }
+.tier .badge { position: absolute; top: 14px; left: 14px; background: var(--accent); color: var(--brand-deep); font-weight: 700; z-index: 1; }
+
+/* ---------- Clubs & facilities chips ---------- */
+.chips { display: flex; flex-wrap: wrap; gap: 10px; list-style: none; margin: 0; padding: 0; }
+.chips li { background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 8px 18px; font-weight: 500; color: var(--brand-dark); box-shadow: 0 1px 2px rgba(70,40,15,.06); }
+.chips li::before { content: "+"; color: var(--accent-dark); font-weight: 700; margin-right: 8px; }
+.two-col { display: grid; gap: 40px; grid-template-columns: 1fr; }
+@media (min-width: 900px) { .two-col { grid-template-columns: 1fr 1fr; } }
+
+/* ---------- Video band ---------- */
+.video-band { background: var(--brand-deep); color: var(--cream); padding-block: clamp(40px, 6vw, 72px); }
+.video-band h2 { color: #fff; }
+.video-grid { display: grid; gap: 20px; grid-template-columns: 1fr; margin-top: 24px; }
+@media (min-width: 800px) { .video-grid { grid-template-columns: 1fr 1fr; } }
+.video-card { background: #000; border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-lg); }
+.video-card video { width: 100%; aspect-ratio: 16/9; object-fit: cover; background: #000; }
+.video-card p { margin: 0; padding: 12px 16px; background: #1b1007; color: var(--cream); font-size: .95rem; }
+
+/* ---------- Parent Portal ---------- */
+.portal-wrap { max-width: 920px; margin: 0 auto; }
+.portal-card { background: #fff; border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); padding: clamp(20px, 4vw, 34px); margin-bottom: 24px; }
+.portal-signin { text-align: center; padding-block: 48px; }
+.btn-google { display: inline-flex; align-items: center; gap: 12px; background: #fff; color: #3c4043; border: 1px solid #dadce0; border-radius: 999px; padding: 12px 24px; font-weight: 500; box-shadow: var(--shadow); }
+.btn-google:hover { background: #f8f9fa; text-decoration: none; }
+.portal-head { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; justify-content: space-between; }
+.portal-head img { width: 48px; height: 48px; border-radius: 50%; }
+.child-card { border: 1px solid var(--line); background: var(--cream); border-radius: 14px; padding: 16px 18px; margin-top: 14px; }
+.child-card h3 { margin: 0 0 4px; color: var(--brand); }
+.child-card dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; margin: 8px 0 0; }
+.child-card dt { color: var(--muted); } .child-card dd { margin: 0; font-weight: 500; }
+.star-input { display: inline-flex; flex-direction: row-reverse; gap: 4px; }
+.star-input input { position: absolute; opacity: 0; }
+.star-input label { font-size: 2rem; color: #d9cfb8; cursor: pointer; line-height: 1; }
+.star-input input:checked ~ label, .star-input label:hover, .star-input label:hover ~ label { color: var(--accent-dark); }
+.star-input input:focus-visible + label { outline: 3px solid var(--accent); }
+.status-pill { display: inline-block; font-size: .78rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: var(--cream-2); color: var(--brand-dark); }
+.status-pill.ok { background: #dcfce7; color: #166534; }
+
+/* ---------- Portal email/password form ---------- */
+.or-divider { display: flex; align-items: center; gap: 12px; margin: 22px auto 14px; max-width: 380px; color: var(--muted); font-size: .85rem; }
+.or-divider::before, .or-divider::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+.auth-tabs { display: inline-flex; background: var(--cream-2); border-radius: 999px; padding: 4px; margin-bottom: 16px; }
+.auth-tabs button { border: 0; background: transparent; padding: 9px 20px; border-radius: 999px; font-weight: 600; color: var(--brand-dark); min-height: 40px; }
+.auth-tabs button.active { background: var(--brand); color: #fff; }
+.auth-form { max-width: 380px; margin: 0 auto; text-align: left; }
+.link-btn { background: none; border: 0; padding: 0; color: var(--brand); text-decoration: underline; font: inherit; }
+
+/* ==========================================================================
+   WOODCREEK-STYLE LAYOUT (v2): cream header, clean image slider, split intro,
+   Why-Choose-Us / Videos / Clubs trio
+   ========================================================================== */
+:root { --page: #f4f0e8; --dark-col: #2a1d14; }
+body { background: var(--page); }
+.section--soft, .home-cream { background: var(--page); }
+.site-header { background: var(--page); }
+.site-header.is-scrolled { box-shadow: 0 3px 14px rgba(60,35,15,.16); }
+
+/* ----- Header: logo left, uppercase menu right (desktop) ----- */
+@media (min-width: 1024px) {
+  .site-header { display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: 24px; padding-inline: clamp(16px, 2.5vw, 40px); }
+  .topbar { display: contents; }
+  .topbar-actions { display: none; }
+  .brand { grid-column: 1; padding-block: 8px; }
+  .mainnav { grid-column: 2; background: transparent; }
+  .mainnav > ul { max-width: none; padding: 0; align-items: center; justify-content: flex-end; gap: clamp(2px, 1.1vw, 20px); }
+  .mainnav > ul > li > a { color: var(--ink); text-transform: uppercase; font-size: .78rem; font-weight: 600; letter-spacing: .02em; padding: 28px 9px; border-bottom: 0; }
+  .mainnav > ul > li > a:hover, .mainnav > ul > li:focus-within > a { background: transparent; color: var(--brand); }
+  .mainnav .has-sub > a::after { content: "▾"; font-size: .75em; margin-left: 4px; }
+  .mainnav .sub { border-top: 3px solid var(--accent); border-radius: 0 0 8px 8px; }
+  .mainnav .nav-portal-li > a { background: var(--brand); color: #fff !important; border-radius: 999px; padding: 10px 18px !important; margin-left: 6px; }
+  .mainnav .nav-portal-li > a:hover { background: var(--brand-dark) !important; color: #fff !important; }
+}
+.nav-portal-li { list-style: none; }
+@media (max-width: 1023px) { .mainnav { display: none; } }
+
+/* ----- Slider: photo only, thin white arrows, Admission pill ----- */
+.slider-track { height: clamp(300px, 46vw, 720px); }
+.slide::after { display: none; }
+.slide.has-caption::after { display: block; }
+.slider-btn { background: transparent !important; box-shadow: none; width: 56px; height: 80px; margin-top: -40px; font-size: 4rem; font-weight: 200; line-height: 80px; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,.55); padding: 0; }
+.slider-btn:hover { color: var(--accent); }
+.slider-btn.prev { left: 10px; } .slider-btn.next { right: 10px; }
+.slider-dots { bottom: 10px; }
+.slider-cta { position: absolute; z-index: 4; right: clamp(14px, 11vw, 180px); bottom: clamp(18px, 6vw, 44px); display: block; width: min(320px, 78vw); text-decoration: none !important; filter: drop-shadow(0 6px 12px rgba(0,0,0,.35)); transition: transform .25s; }
+.slider-cta:hover { transform: translateY(-3px); }
+.slider-cta span { display: block; text-align: center; border-radius: 999px; }
+.slider-cta .pill-1 { position: relative; z-index: 2; background: var(--brand); color: #fff; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; padding: 13px 20px; font-size: clamp(.85rem, 1.5vw, 1.05rem); }
+.slider-cta .pill-2 { position: relative; z-index: 1; background: var(--accent); color: var(--brand-deep); font-weight: 700; font-size: clamp(.68rem, 1.1vw, .82rem); padding: 14px 14px 8px; margin: -10px 0 0 22px; }
+@media (max-width: 640px) { .slider-btn { display: none; } .slider-cta { right: 50%; transform: translateX(50%); } .slider-cta:hover { transform: translateX(50%) translateY(-3px); } }
+
+/* ----- Intro split ----- */
+.home-intro { display: grid; grid-template-columns: 1fr; background: var(--page); }
+@media (min-width: 900px) { .home-intro { grid-template-columns: 1fr 1fr; } }
+.intro-panel { background: linear-gradient(rgba(107,68,40,.94), rgba(88,55,32,.94)), url(/assets/images/hero-campus-1200.jpg) center/cover; color: #fff; padding: clamp(28px, 5vw, 56px) clamp(20px, 5vw, 64px); margin-top: 32px; }
+@media (max-width: 899px) { .intro-panel { margin-top: 0; } }
+.intro-panel h2 { color: #fff; font-size: clamp(1.15rem, 2vw, 1.45rem); font-family: var(--font-head); line-height: 1.35; margin: 0; }
+.intro-rule { width: 130px; height: 2px; background: #fff; margin: 16px 0 24px -64px; }
+@media (max-width: 899px) { .intro-rule { margin-left: 0; } }
+.intro-panel p { color: #fff; font-size: 1rem; line-height: 1.7; margin-bottom: 1em; }
+.intro-link { color: var(--accent) !important; font-weight: 700; text-decoration: none; }
+.intro-link:hover { text-decoration: underline; }
+.intro-side { padding: 32px clamp(16px, 3vw, 40px) 40px; }
+.intro-side img { width: 100%; max-height: 300px; object-fit: cover; display: block; }
+.intro-side-text h2 { color: var(--brand); font-size: clamp(1.5rem, 2.6vw, 2rem); margin: 28px 0 10px; }
+.intro-side-text h3 { color: var(--brand); font-size: 1.15rem; margin: 18px 0 4px; }
+.intro-side-text p { text-align: justify; hyphens: auto; }
+
+/* ----- Why / Videos / Clubs trio ----- */
+.home-trio { display: grid; grid-template-columns: 1fr; background: var(--page); }
+@media (min-width: 900px) { .home-trio { grid-template-columns: 1.15fr .8fr .5fr; } }
+.trio-why { padding: clamp(28px, 4vw, 48px) clamp(20px, 3vw, 40px); }
+.trio-why h2 { font-size: clamp(1.5rem, 2.6vw, 2rem); margin-bottom: 18px; }
+.trio-why dt { font-weight: 700; color: var(--ink); margin-top: 16px; }
+.trio-why dd { margin: 2px 0 0; color: var(--text); }
+.trio-video { position: relative; display: block; min-height: 300px; overflow: hidden; background: #000; }
+.trio-video img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .6s; }
+.trio-video:hover img { transform: scale(1.05); }
+.trio-video::after { content: ""; position: absolute; inset: 0; background: rgba(40,22,10,.25); }
+.trio-video .play { position: absolute; z-index: 2; left: 50%; top: 46%; transform: translate(-50%,-50%); opacity: .95; }
+.trio-video .play-label { position: absolute; z-index: 2; left: 0; right: 0; top: calc(46% + 52px); text-align: center; color: #fff; font-weight: 700; font-size: 1.5rem; text-shadow: 0 2px 8px rgba(0,0,0,.5); }
+.trio-lists { background: var(--dark-col); color: #fff; padding: clamp(24px, 3vw, 40px) clamp(20px, 2.5vw, 32px); }
+.trio-lists h2 { color: #fff; font-size: 1.6rem; margin: 0 0 12px; }
+.trio-lists h2:not(:first-child) { margin-top: 26px; }
+.trio-lists ul { list-style: none; margin: 0; padding: 0; }
+.trio-lists li { padding: 3px 0; font-size: 1.02rem; }
+.trio-lists li::before { content: "+"; font-weight: 800; margin-right: 6px; color: var(--accent); }
+
+
+/* ==========================================================================
+   v3: stricter Woodcreek look. Poppins (geometric, like Century Gothic), flat & square
+   ========================================================================== */
+:root { --font-head: "Century Gothic", "CenturyGothic", "Poppins", "Segoe UI", sans-serif; --font-body: "Century Gothic", "CenturyGothic", "Questrial", "Poppins", "Segoe UI", sans-serif; }
+body, .btn, input, textarea, select, button { font-family: "Century Gothic", "CenturyGothic", "Questrial", "Poppins", "Segoe UI", sans-serif; }
+h1, h2, h3, h4, .brand-text strong { font-family: "Century Gothic", "CenturyGothic", "Poppins", "Segoe UI", sans-serif; font-weight: 700; letter-spacing: 0; }
+body { font-size: 15.5px; line-height: 1.7; }
+.mainnav > ul > li > a { font-family: "Century Gothic", "CenturyGothic", "Questrial", "Poppins", "Segoe UI", sans-serif; font-weight: 600; }
+.intro-panel h2 { font-weight: 600; }
+.intro-side-text h2, .trio-why h2 { font-weight: 600; color: var(--brand); }
+.trio-why h2 { color: var(--ink); }
+.trio-lists h2 { font-weight: 600; }
+.intro-side img { max-height: 280px; }
+.card, .mv-card, .tier, .portal-card, .panel-card { border-radius: 4px; }
+.btn { border-radius: 999px; }
+
+/* Our School: flat, borderless, edge-to-edge */
+.home-tiers { background: var(--page); padding: 56px 0 0; text-align: center; }
+.home-tiers h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); color: var(--brand); margin-bottom: 28px; }
+.tiers-flat { display: grid; grid-template-columns: 1fr; }
+@media (min-width: 800px) { .tiers-flat { grid-template-columns: repeat(3, 1fr); } }
+.tiers-flat a { position: relative; display: block; overflow: hidden; color: #fff; text-decoration: none; aspect-ratio: 4/3; }
+.tiers-flat img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s; }
+.tiers-flat a:hover img { transform: scale(1.06); }
+.tiers-flat a > div { position: absolute; inset: auto 0 0 0; padding: 60px 24px 22px; text-align: left; background: linear-gradient(0deg, rgba(51,32,15,.9), rgba(51,32,15,0)); }
+.tiers-flat h3 { color: #fff; margin: 0 0 4px; font-size: 1.35rem; }
+.tiers-flat p { color: var(--cream); margin: 0; font-size: .95rem; }
+
+/* Admission buttons band */
+.home-buttons { display: grid; grid-template-columns: 1fr; gap: 0; background: var(--brand); }
+@media (min-width: 700px) { .home-buttons { grid-template-columns: repeat(4, 1fr); } }
+.hb { display: block; text-align: center; text-decoration: none !important; color: #fff; font-weight: 600; font-size: 1.05rem; padding: 26px 16px; border-right: 1px solid rgba(255,255,255,.18); transition: background .25s, color .25s; }
+.hb small { display: block; font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); font-weight: 500; margin-bottom: 2px; }
+.hb:hover { background: var(--accent); color: var(--brand-deep); }
+.hb:hover small { color: var(--brand-dark); }
+.hb-sm { display: inline-block; background: var(--brand); border-radius: 999px; padding: 12px 30px; margin: 4px; border: 0; }
+
+.home-social { background: var(--page); text-align: center; padding: 54px 16px 60px; }
+.home-social h2 { font-size: clamp(1.3rem, 2.4vw, 1.8rem); color: var(--brand); }
+
+/* Footer in the same flat style */
+.site-footer { background: var(--dark-col); }
+
+.history-photo img { width: 100%; max-height: 560px; object-fit: cover; object-position: top; border-radius: 4px; box-shadow: var(--shadow-lg); }
+.photo-cap { font-size: .85rem; color: var(--muted); margin: 8px 0 0; text-align: center; }
+
+.slider-pause { position: absolute; z-index: 4; left: 14px; bottom: 12px; width: 34px; height: 34px; border-radius: 50%; border: 0; background: rgba(255,249,230,.85); color: var(--brand-deep); font-size: .7rem; line-height: 1; padding: 0; cursor: pointer; }
+.slider-pause:hover { background: var(--accent); }
+
+/* Always animate the slider, even when the OS "reduce motion" setting is on (site.css disables all transitions there). */
+.slider-strip { transition: transform var(--dur, 0s) cubic-bezier(.65, 0, .35, 1) !important; }

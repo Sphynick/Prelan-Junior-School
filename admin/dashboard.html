@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard | Prelan Junior School</title>
-  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/styles.css?v=20261109d">
+  <link rel="stylesheet" href="/css/admin-ui.css?v=20261109d">
   <link rel="icon" type="image/svg+xml" href="/assets/images/prelan_logo.svg">
   <link rel="alternate icon" href="/favicon.svg">
 <style>
@@ -55,6 +56,22 @@
         <button type="button" class="sidebar-tab-btn" data-tab="tab-gallery">
           <span class="sidebar-tab-icon">🖼️</span>
           <span>Campus Gallery</span>
+        </button>
+        <button type="button" class="sidebar-tab-btn" data-tab="tab-slides">
+          <span class="sidebar-tab-icon">🎞️</span>
+          <span>Homepage Slides</span>
+        </button>
+        <button type="button" class="sidebar-tab-btn" data-tab="tab-learners">
+          <span class="sidebar-tab-icon">👨‍👩‍👧</span>
+          <span>Learners (Parent Portal)</span>
+        </button>
+        <button type="button" class="sidebar-tab-btn" data-tab="tab-reviews">
+          <span class="sidebar-tab-icon">⭐</span>
+          <span>Parent Reviews</span>
+        </button>
+        <button type="button" class="sidebar-tab-btn" data-tab="tab-settings">
+          <span class="sidebar-tab-icon">⚙️</span>
+          <span>Site Settings</span>
         </button>
         <!-- Owner Only Tab -->
         <button type="button" class="sidebar-tab-btn" id="tab-btn-admins" data-tab="tab-admins" style="display: none;">
@@ -244,6 +261,54 @@
             </div>
           </div>
         </section>
+        <!-- ============ HOMEPAGE SLIDES ============ -->
+        <section id="tab-slides" class="tab-panel">
+          <div class="panel-card">
+            <div class="panel-header">
+              <h2 class="panel-title">Homepage Slider</h2>
+              <button type="button" id="new-slide-btn" class="btn btn-sm btn-primary">+ Add Slide</button>
+            </div>
+            <p class="form-hint">Slides appear on the homepage in this order. Use ▲ ▼ to reorder. Wide landscape photos (16:9) look best. If no slides are active, the built-in default slides are shown.</p>
+            <div id="slides-list"></div>
+          </div>
+        </section>
+
+        <!-- ============ LEARNERS ============ -->
+        <section id="tab-learners" class="tab-panel">
+          <div class="panel-card">
+            <div class="panel-header">
+              <h2 class="panel-title">Learners linked to parents</h2>
+              <button type="button" id="new-learner-btn" class="btn btn-sm btn-primary">+ Add Learner</button>
+            </div>
+            <p class="form-hint">A parent sees a learner only when the parent's Google account email matches the "Parent Google email" saved here.</p>
+            <div id="learners-list"></div>
+          </div>
+        </section>
+
+        <!-- ============ REVIEWS ============ -->
+        <section id="tab-reviews" class="tab-panel">
+          <div class="panel-card">
+            <div class="panel-header"><h2 class="panel-title">Parent Reviews</h2></div>
+            <p class="form-hint">Approve a review to publish it on the website. Parents can edit their review; an edited review goes back to "Pending".</p>
+            <div id="reviews-list"></div>
+          </div>
+        </section>
+
+        <!-- ============ SETTINGS ============ -->
+        <section id="tab-settings" class="tab-panel">
+          <div class="panel-card">
+            <div class="panel-header"><h2 class="panel-title">Contact details</h2></div>
+            <form id="extras-settings-form">
+              <div class="form-group"><label class="form-label">Phone</label><input class="form-control" name="phone"></div>
+              <div class="form-group"><label class="form-label">WhatsApp number</label><input class="form-control" name="whatsapp"></div>
+              <div class="form-group"><label class="form-label">Email</label><input class="form-control" name="email" type="email"></div>
+              <div class="form-group"><label class="form-label">Address</label><input class="form-control" name="address"></div>
+              <div class="form-group"><label class="form-label">Office hours</label><input class="form-control" name="officeHours"></div>
+              <button type="submit" class="btn btn-primary">Save settings</button>
+            </form>
+          </div>
+        </section>
+
         <!-- ==================================================================
              TAB 10: ADMIN USERS (OWNER ONLY)
              ================================================================== -->
@@ -520,6 +585,45 @@
     </div>
   </div>
 
-  <script type="module" src="/js/admin-dashboard.js"></script>
+  <div class="modal-overlay" id="modal-slide">
+    <div class="modal-card">
+      <button type="button" class="modal-close-btn" data-close-modal>&times;</button>
+      <h3 style="font-size:1.35rem;color:var(--color-primary-dark);margin-bottom:1rem;" id="slide-modal-title">Slide</h3>
+      <form id="slide-form">
+        <input type="hidden" name="id">
+        <div class="form-group"><label class="form-label">Small label above the title (optional)</label><input class="form-control" name="kicker" maxlength="40" placeholder="e.g. Admissions Open 2027"></div>
+        <div class="form-group"><label class="form-label">Headline (optional)</label><input class="form-control" name="title" maxlength="80"></div>
+        <div class="form-group"><label class="form-label">Text (optional)</label><textarea class="form-control" name="text" rows="3" maxlength="220"></textarea></div>
+        <div class="form-group"><label class="form-label">Button label (optional)</label><input class="form-control" name="ctaLabel" maxlength="30"></div>
+        <div class="form-group"><label class="form-label">Button link (e.g. /apply.html)</label><input class="form-control" name="ctaUrl" placeholder="/apply.html"></div>
+        <div class="form-group"><label class="form-label">Image *</label><input type="file" class="form-control" name="file" accept="image/*"><input type="url" class="form-control" name="imageUrl" style="margin-top:.5rem" placeholder="Or paste image URL (https://...)"><span class="form-hint">Uploads are resized and compressed automatically. For the cleanest look, leave the headline, text and button empty: the slide will show the photo only.</span></div>
+        <div class="form-group"><label class="form-label">Image description (for accessibility)</label><input class="form-control" name="alt" maxlength="120"></div>
+        <div class="form-group"><label class="form-label"><input type="checkbox" name="active" checked> Show this slide</label></div>
+        <button type="submit" class="btn btn-primary btn-block" id="slide-save-btn">Save slide</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-learner">
+    <div class="modal-card">
+      <button type="button" class="modal-close-btn" data-close-modal>&times;</button>
+      <h3 style="font-size:1.35rem;color:var(--color-primary-dark);margin-bottom:1rem;" id="learner-modal-title">Learner</h3>
+      <form id="learner-form">
+        <input type="hidden" name="id">
+        <div class="form-group"><label class="form-label">Parent Google email *</label><input class="form-control" type="email" name="parentEmail" required></div>
+        <div class="form-group"><label class="form-label">Learner name *</label><input class="form-control" name="name" required></div>
+        <div class="form-group"><label class="form-label">Class *</label>
+          <select class="form-control" name="className" required><option value="Crèche">Crèche</option><option value="Reception / Playgroup">Reception / Playgroup</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option></select></div>
+        <div class="form-group"><label class="form-label">Admission no.</label><input class="form-control" name="admissionNo"></div>
+        <div class="form-group"><label class="form-label">Class teacher</label><input class="form-control" name="classTeacher"></div>
+        <div class="form-group"><label class="form-label">Transport</label><input class="form-control" name="transport" placeholder="e.g. School bus, Route A"></div>
+        <div class="form-group"><label class="form-label">Note for parent</label><textarea class="form-control" name="notes" rows="2" maxlength="500"></textarea></div>
+        <button type="submit" class="btn btn-primary btn-block">Save learner</button>
+      </form>
+    </div>
+  </div>
+
+  <script type="module" src="/js/admin-dashboard.js?v=20261109d"></script>
+  <script type="module" src="/js/admin-extras.js?v=20261109d"></script>
 </body>
 </html>

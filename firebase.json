@@ -9,11 +9,48 @@
       "firestore.rules",
       "storage.rules",
       "package.json",
-      "package-lock.json"
+      "package-lock.json",
+      "*.zip"
     ],
     "cleanUrls": true,
-    "trailingSlash": false
+    "trailingSlash": false,
+    "redirects": [
+      {
+        "source": "/programmes/pre-primary",
+        "destination": "/programmes/kindergarten",
+        "type": 301
+      },
+      {
+        "source": "/programmes/pre-primary.html",
+        "destination": "/programmes/kindergarten.html",
+        "type": 301
+      },
+      {
+        "source": "/programmes/lower-primary",
+        "destination": "/programmes/primary",
+        "type": 301
+      },
+      {
+        "source": "/programmes/lower-primary.html",
+        "destination": "/programmes/primary.html",
+        "type": 301
+      },
+      {
+        "source": "/programmes/upper-primary",
+        "destination": "/programmes/primary",
+        "type": 301
+      },
+      {
+        "source": "/programmes/upper-primary.html",
+        "destination": "/programmes/primary.html",
+        "type": 301
+      }
+    ]
   },
-  "firestore": { "rules": "firestore.rules" },
-  "storage": { "rules": "storage.rules" }
+  "firestore": {
+    "rules": "firestore.rules"
+  },
+  "storage": {
+    "rules": "storage.rules"
+  }
 }

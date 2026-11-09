@@ -114,9 +114,44 @@ service cloud.firestore {
     }
 
     // 9. Reviews Collection:
-    // Public can read only approved reviews. Only admins can create, edit or delete them.
+    // Public reads only approved reviews. A signed-in parent owns exactly ONE review
+    // whose document id equals their uid; they can create, edit and delete it, but can
+    // never approve it (approved must stay false). Admins have full access.
     match /reviews/{reviewId} {
-      allow read: if resource.data.approved == true || isAdmin();
+      // The owner check comes first so a parent can look up their own (possibly not-yet-existing) review.
+      allow read: if (isAuthenticated() && reviewId == request.auth.uid)
+                  || isAdmin()
+                  || resource.data.approved == true;
+      allow create, update: if isAdmin()
+                  || (isAuthenticated()
+                      && request.auth.token.email_verified == true
+                      && reviewId == request.auth.uid
+                      && request.resource.data.uid == request.auth.uid
+                      && request.resource.data.approved == false
+                      && request.resource.data.rating is int
+                      && request.resource.data.rating >= 1 && request.resource.data.rating <= 5
+                      && request.resource.data.content is string
+                      && request.resource.data.content.size() >= 10
+                      && request.resource.data.content.size() <= 1000
+                      && request.resource.data.author is string
+                      && request.resource.data.author.size() <= 120);
+      allow delete: if isAdmin() || (isAuthenticated() && reviewId == request.auth.uid);
+    }
+
+    // 9b. Homepage Slides: public read, admin write.
+    match /slides/{slideId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 9c. Children (learner details shown in the Parent Portal):
+    // A parent may read only records whose parentEmail equals their VERIFIED Google email.
+    // Only admins can create, edit or delete them.
+    match /children/{childId} {
+      allow read: if isAdmin()
+                  || (isAuthenticated()
+                      && request.auth.token.email_verified == true
+                      && resource.data.parentEmail == request.auth.token.email.lower());
       allow write: if isAdmin();
     }
 

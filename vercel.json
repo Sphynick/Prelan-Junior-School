@@ -11,6 +11,36 @@
       "source": "/fees.html",
       "destination": "/",
       "permanent": true
+    },
+    {
+      "source": "/programmes/pre-primary",
+      "destination": "/programmes/kindergarten",
+      "permanent": true
+    },
+    {
+      "source": "/programmes/pre-primary.html",
+      "destination": "/programmes/kindergarten.html",
+      "permanent": true
+    },
+    {
+      "source": "/programmes/lower-primary",
+      "destination": "/programmes/primary",
+      "permanent": true
+    },
+    {
+      "source": "/programmes/lower-primary.html",
+      "destination": "/programmes/primary.html",
+      "permanent": true
+    },
+    {
+      "source": "/programmes/upper-primary",
+      "destination": "/programmes/primary",
+      "permanent": true
+    },
+    {
+      "source": "/programmes/upper-primary.html",
+      "destination": "/programmes/primary.html",
+      "permanent": true
     }
   ]
 }

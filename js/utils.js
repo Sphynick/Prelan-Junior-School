@@ -279,10 +279,8 @@ export const APPLICATION_STATUSES = [
 ];
 
 const GRADE_OPTIONS = [
-  ["Creche", "Creche (age 2)"],
-  ["Reception", "Reception / Play Group (age 3)"],
-  ["PP1", "Pre-Primary 1 (PP1 · age 4)"],
-  ["PP2", "Pre-Primary 2 (PP2 · age 5)"],
+  ["Creche", "Crèche (age 2)"],
+  ["Reception", "Reception / Playgroup (age 3+)"],
   ["Grade 1", "Grade 1 (age 6)"],
   ["Grade 2", "Grade 2 (age 7)"],
   ["Grade 3", "Grade 3 (age 8)"],

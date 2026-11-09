@@ -57,7 +57,7 @@ const FALLBACK_SETTINGS = {
   heroTitle: "Nurturing Every Learner's Potential Through CBE Excellence",
   heroSubtitle: "Prelan Junior School provides a grounded, supportive environment where learners build real-life competencies, strong character, and a lifelong passion for discovery.",
   admissionBannerOpen: true,
-  admissionBannerText: "Registration for the 2027 academic year is now open for Nursery through Grade 9.",
+  admissionBannerText: "Admissions for the 2027 academic year are open: Crèche through Grade 9.",
 };
 
 
@@ -69,49 +69,26 @@ const SITE_VIDEOS = [
 ];
 
 const FALLBACK_GALLERY = [
-  { title: "Our Colourful School Compound", category: "Grounds", imageUrl: "/assets/images/gallery-campus.jpg" },
-  { title: "School Buses: Soaring to Excellence", category: "Grounds", imageUrl: "/assets/images/gallery-buses.jpg" },
-  { title: "Kindergarten Rest Time", category: "Classrooms", imageUrl: "/assets/images/gallery-nap.jpg" },
-  { title: "Music Lessons for Our Youngest Learners", category: "Clubs", imageUrl: "/assets/images/gallery-toddler.jpg" },
-  { title: "Music & Instrumental Training", category: "Clubs", imageUrl: "/assets/images/gallery-music-keyboard.jpg" },
-  { title: "Ballet Club", category: "Clubs", imageUrl: "/assets/images/gallery-ballet.jpg" },
-  { title: "Home Science Club: Young Taste Masters", category: "Clubs", imageUrl: "/assets/images/gallery-cooking.jpg" },
-  { title: "Young Taste Masters Team", category: "Clubs", imageUrl: "/assets/images/gallery-tastemasters.jpg" },
-  { title: "Tree Planting Day", category: "Clubs", imageUrl: "/assets/images/gallery-planting.jpg" },
-  { title: "Cultural Day", category: "Events", imageUrl: "/assets/images/gallery-cultural.jpg" },
-  { title: "Career Day: Our Little Pilots", category: "Events", imageUrl: "/assets/images/gallery-pilots.jpg" },
-  { title: "Kindergarten Graduation 2026", category: "Events", imageUrl: "/assets/images/gallery-graduation.jpg" }
+  { title: "Swimming Lessons", category: "Clubs", imageUrl: "/assets/gallery/swimming-lesson.jpg" },
+  { title: "Coding in the Computer Lab", category: "Classrooms", imageUrl: "/assets/gallery/computer-lab-coding.jpg" },
+  { title: "Class of 2026 Graduation", category: "Events", imageUrl: "/assets/gallery/graduation-2026-stage.jpg" },
+  { title: "Speech at the Class of 2026 Graduation", category: "Events", imageUrl: "/assets/gallery/graduation-2026-speech.jpg" },
+  { title: "Our Colourful Classroom Courtyard", category: "Grounds", imageUrl: "/assets/gallery/classroom-courtyard.jpg" },
+  { title: "Science Laboratory", category: "Classrooms", imageUrl: "/assets/gallery/science-laboratory.jpg" },
+  { title: "Career Day: Prelan Hospital", category: "Events", imageUrl: "/assets/gallery/career-day-hospital.jpg" }
 ];
 
-const FALLBACK_REVIEWS = [
-  {
-    author: "Mary Wanjiku",
-    childInfo: "Parent of Grade 2 Learner",
-    rating: 5,
-    content: "Prelan has been a blessing for my daughter. Her reading fluency and confidence in public speaking have grown tremendously under CBE teachers who truly care."
-  },
-  {
-    author: "David Kamau",
-    childInfo: "Parent of PP2 Learner",
-    rating: 5,
-    content: "The balanced meals, strict campus safety, and caring bus service give us total peace of mind every morning. The teachers communicate with parents constantly."
-  },
-  {
-    author: "Faith Njoki",
-    childInfo: "Parent of Grade 5 Learner",
-    rating: 5,
-    content: "The practical science projects and clubs have helped my son discover his passion for agriculture and ICT. Prelan's environment is very serene and disciplined."
-  }
-];
+// No invented testimonials: only real, admin-approved parent reviews are ever shown.
+const FALLBACK_REVIEWS = [];
 
 const FALLBACK_FAQS = [
   {
     question: "What curriculum does Prelan Junior School follow?",
-    answer: "We strictly follow the Kenyan Competency Based Education (CBE) approved by KICD and the Ministry of Education, covering Kindergarten (Creche, Reception, PP1 and PP2), Primary (Grades 1–6) and Junior Secondary (Grades 7–9)."
+    answer: "We strictly follow the Kenyan Competency Based Education (CBE) approved by KICD and the Ministry of Education, covering Kindergarten (Crèche for age 2 and Reception / Playgroup for age 3+), Primary (Grades 1–6) and Junior Secondary (Grades 7–9)."
   },
   {
     question: "What are your daily school operating hours?",
-    answer: "Regular school hours run from Monday to Friday, 7:45 AM to 3:30 PM for Pre-Primary, and up to 4:00 PM for Upper Primary classes. Gates open at 7:00 AM. Weekend remedial classes or co-curricular clinics run on Saturday mornings."
+    answer: "Please contact the school office for the current daily timetable for Kindergarten, Primary and Junior Secondary."
   },
   {
     question: "Do you offer reliable school bus transport?",
@@ -127,26 +104,8 @@ const FALLBACK_FAQS = [
   }
 ];
 
-const FALLBACK_NEWS = [
-  {
-    title: "Term Admissions Ongoing: Join the Prelan Family",
-    date: "Current Term",
-    summary: "Enrolment is now open for Kindergarten (Creche to PP2), Primary Grades 1 to 6 and Junior Secondary Grades 7 to 9. Schedule your on-site campus tour today.",
-    imageUrl: "/assets/images/pilots-1200.jpg"
-  },
-  {
-    title: "Junior Environmental & 4-K Club Tree Planting Day",
-    date: "Recent Event",
-    summary: "Our learners participated in an exciting environmental conservation project cultivating indigenous tree seedlings within our campus gardens.",
-    imageUrl: "/assets/images/planting-1200.jpg"
-  },
-  {
-    title: "Upcoming Academic Clinic & Parent Consultation",
-    date: "Term Calendar",
-    summary: "Parents and guardians are warmly invited to discuss individual learner assessment progress with class educators.",
-    imageUrl: "/assets/images/graduation-1200.jpg"
-  }
-];
+// No placeholder news: the section is hidden until the school publishes a post.
+const FALLBACK_NEWS = [];
 
 /* ==========================================================================
    DOM INITIALIZATION & DATA LOADING
@@ -555,7 +514,10 @@ async function loadReviews() {
   }
 
   if (reviews.length === 0) {
-    reviews = FALLBACK_REVIEWS;
+    const sec = container.closest("section[data-hide-empty]");
+    if (sec) sec.style.display = "none";
+    else container.innerHTML = '<p class="note">No reviews yet. Be the first: sign in to the Parent Portal to share your experience.</p>';
+    return;
   }
 
   reviews = reviews.slice(0, Number(container.dataset.limit) || 12);
@@ -777,7 +739,12 @@ async function loadNews() {
     }
   }
 
-  if (news.length === 0) news = FALLBACK_NEWS;
+  if (news.length === 0) {
+    const sec = container.closest("section[data-hide-empty]");
+    if (sec) sec.style.display = "none";
+    else container.innerHTML = '<p class="note">No news posts yet. Please check back soon.</p>';
+    return;
+  }
 
   news = news.slice(0, Number(container.dataset.limit) || 3);
 
@@ -790,7 +757,7 @@ async function loadNews() {
     imgWrapper.className = "news-card-img";
 
     const img = document.createElement("img");
-    img.src = item.imageUrl || "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=800&q=80";
+    img.src = item.imageUrl || "/assets/images/campus-640.jpg";
     img.alt = item.title;
     img.loading = "lazy";
     imgWrapper.appendChild(img);
