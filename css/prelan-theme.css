@@ -271,3 +271,62 @@ body { font-size: 15.5px; line-height: 1.7; }
 
 /* Always animate the slider, even when the OS "reduce motion" setting is on (site.css disables all transitions there). */
 .slider-strip { transition: transform var(--dur, 0s) cubic-bezier(.65, 0, .35, 1) !important; }
+
+/* ==========================================================================
+   MOBILE MENU: Woodcreek style (outlined phone + MENU buttons, full-width panel
+   under the header, centred group headings, solid brown link blocks)
+   ========================================================================== */
+@media (max-width: 1023px) {
+  .site-header { position: sticky; top: 0; z-index: 310; background: var(--page); }
+  .topbar { padding-block: 8px; }
+  .brand-text small { display: none; }
+  .icon-btn--wa, .top-portal, .top-apply { display: none !important; }
+  .icon-btn--call { background: transparent; color: var(--ink); border: 1px solid var(--ink); border-radius: 0; width: 46px; height: 46px; }
+  .menu-btn { width: auto; height: 46px; padding: 0 14px; border: 1px solid var(--ink); border-radius: 0; background: transparent; flex-direction: row; gap: 12px; }
+  .menu-btn .menu-lines, .menu-btn .menu-label { width: auto; height: auto; background: none; border-radius: 0; }
+  .menu-btn .menu-lines { display: flex; }
+  .menu-lines { display: flex; flex-direction: column; gap: 4px; }
+  .menu-lines i { display: block; width: 22px; height: 2px; background: var(--ink); }
+  .menu-label { font-weight: 600; font-size: .95rem; letter-spacing: .04em; color: var(--ink); }
+
+  .mobile-nav-drawer { inset: auto; top: var(--hh, 76px); left: 0; right: 0; bottom: 0; background: var(--page); overflow-y: auto; overscroll-behavior: contain; z-index: 305; transition: opacity .2s, visibility .2s; }
+  .mobile-nav-panel { position: static; width: auto; transform: none; background: transparent; padding: 6px 14px 120px; display: block; overflow: visible; }
+  .drawer-head { display: none; }
+  .mobile-nav-panel summary { justify-content: center; gap: 6px; padding: 14px 0 8px; font-family: inherit; font-size: .86rem; font-weight: 600; text-transform: uppercase; letter-spacing: .02em; color: var(--ink); background: transparent; border: 0; cursor: pointer; }
+  .mobile-nav-panel summary::after, .mobile-nav-panel details[open] > summary::after { content: "▾"; color: var(--ink); font-size: .8em; transition: transform .2s; }
+  .mobile-nav-panel details:not([open]) > summary::after { transform: rotate(-90deg); }
+  .mobile-nav-panel details:first-of-type > summary, .mobile-nav-panel details:first-of-type > summary::after { color: var(--brand); }
+  .mobile-nav-panel details a.mobile-nav-item { display: block; background: var(--brand); color: #fff !important; font-weight: 600; font-size: .88rem; padding: 11px 12px; margin: 0 0 3px; border: 0; border-radius: 0; }
+  .mobile-nav-panel details a.mobile-nav-item:active, .mobile-nav-panel details a.mobile-nav-item:hover { background: var(--brand-dark); text-decoration: none; }
+  .mobile-nav-panel > a.mobile-nav-item { display: block; text-align: center; text-transform: uppercase; font-size: .86rem; font-weight: 600; color: var(--ink); background: transparent; padding: 14px 0 8px; border: 0; }
+  .drawer-cta { display: grid; gap: 3px; margin-top: 14px; }
+  .drawer-cta .btn { justify-content: flex-start; border-radius: 0; border: 0; background: var(--brand); color: #fff; font-size: .88rem; font-weight: 600; padding: 11px 12px; min-height: 0; box-shadow: none; }
+  .drawer-cta .btn-accent { background: var(--accent); color: var(--brand-deep); }
+}
+
+/* ---- New logo (transparent PNG that already contains the school name + motto) ---- */
+.brand-logo { width: auto !important; height: 40px; max-width: 60vw; object-fit: contain; border-radius: 0 !important; }
+@media (min-width: 1024px) { .brand-logo { height: 68px; } }
+.footer-brand img { width: 210px; max-width: 100%; height: auto; background: #fff; padding: 8px 14px; border-radius: 10px; }
+.trio-video .play-btn { position: absolute; inset: 0; z-index: 3; width: 100%; background: transparent; border: 0; cursor: pointer; color: #fff; }
+.trio-video .play-btn .play { position: absolute; left: 50%; top: 46%; transform: translate(-50%,-50%); }
+.trio-video.is-playing::after { display: none; }
+.trio-video video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; background: #000; z-index: 4; }
+.trio-video { min-height: 420px; }
+
+.article { max-width: 820px; }
+.article h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); margin-bottom: 14px; }
+.article p { font-size: 1.04rem; }
+.split-text .check-list { margin: 14px 0; }
+.split-text .check-list li { margin-bottom: 8px; }
+.section--brand .article h2, .section--brand .article p { color: #fff; }
+
+/* ----- Facilities / Student Life cards ----- */
+.fac-grid { display: grid; gap: 22px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.fac-card { background: #fff; border: 1px solid var(--line); border-radius: 4px; overflow: hidden; display: block; color: inherit; transition: box-shadow .2s, transform .2s; }
+.fac-card:hover { box-shadow: var(--shadow); transform: translateY(-3px); text-decoration: none; }
+.fac-media img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; display: block; }
+.fac-body { padding: 18px 20px 22px; }
+.fac-body h3 { margin: 0 0 6px; color: var(--brand-dark); }
+.fac-body p { margin: 0; color: var(--muted); }
+.card-photo { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 4px; margin-bottom: 14px; display: block; }

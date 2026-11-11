@@ -7,12 +7,19 @@
 import { firebaseConfig, isFirebaseConfigured } from "./firebase-config.js";
 
 const DEFAULT_SLIDES = [
-  { imageUrl: "/assets/gallery/swimming-lesson.jpg", alt: "Prelan learners enjoying a swimming lesson in the school pool" },
+  { imageUrl: "/assets/slides/01-family-fun-day.jpg", alt: "Prelan families and learners enjoying a fun day on the school lawn" },
+  { imageUrl: "/assets/slides/02-career-day-hospital.jpg", alt: "Learners role-playing in the Prelan Hospital career clinic" },
+  { imageUrl: "/assets/slides/03-science-laboratory.jpg", alt: "Learners doing experiments in the Prelan science laboratory" },
+  { imageUrl: "/assets/slides/04-classroom-courtyard.jpg", alt: "The colourful Prelan classroom courtyard" },
+  { imageUrl: "/assets/slides/05-graduation-stage.jpg", alt: "Prelan Junior School Class of 2026 graduation ceremony" },
+  { imageUrl: "/assets/slides/06-laboratory-benches.jpg", alt: "The fitted science laboratory benches and equipment" },
+  { imageUrl: "/assets/slides/07-swimming-lesson.jpg", alt: "Prelan learners enjoying a swimming lesson in the school pool" },
+  { imageUrl: "/assets/slides/08-school-compound.jpg", alt: "The Prelan school compound and classrooms" },
+  { imageUrl: "/assets/slides/09-kindergarten-graduates.jpg", alt: "Prelan Kindergarten Class of 2026 graduates in gowns and sashes" },
   { imageUrl: "/assets/gallery/computer-lab-coding.jpg", alt: "Prelan learners coding in the computer lab" },
-  { imageUrl: "/assets/gallery/graduation-2026-stage.jpg", alt: "Prelan Class of 2026 graduation ceremony" },
-  { imageUrl: "/assets/gallery/classroom-courtyard.jpg", alt: "Colourful Prelan classroom courtyard" },
-  { imageUrl: "/assets/gallery/science-laboratory.jpg", alt: "Learners doing science experiments in a laboratory" },
-  { imageUrl: "/assets/gallery/career-day-hospital.jpg", alt: "Learners role-playing in the Prelan Hospital career clinic" }
+  { imageUrl: "/assets/images/sports-1200.jpg", alt: "Learners racing on the Prelan playing field" },
+  { imageUrl: "/assets/images/tastemasters-1200.jpg", alt: "Prelan learners beside the yellow Prelan school bus" },
+  { imageUrl: "/assets/images/cooking-1200.jpg", alt: "Learners enjoying a meal prepared in the Prelan school kitchen" }
 ];
 
 const root = document.getElementById("hero-slider");
@@ -111,4 +118,16 @@ function render(slides) {
 
   if (N < 2) root.querySelectorAll(".slider-btn, .slider-dots").forEach(n => n.style.display = "none");
   setPos(0, false); mark(0); restart();
+}
+
+
+/* "Why Prelan" video: loads and plays inside its panel when the play button is pressed. */
+const why = document.getElementById("why-video");
+if (why) {
+  why.querySelector(".play-btn").addEventListener("click", () => {
+    const v = document.createElement("video");
+    v.src = "/assets/videos/why-prelan.mp4"; v.controls = true; v.autoplay = true; v.playsInline = true;
+    v.setAttribute("aria-label", "Why choose Prelan");
+    why.innerHTML = ""; why.classList.add("is-playing"); why.appendChild(v); v.play().catch(() => {});
+  });
 }

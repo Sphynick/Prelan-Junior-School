@@ -10,6 +10,8 @@ Built with plain HTML5, CSS3, and vanilla JavaScript (ES modules) using Firebase
 
 ```text
 ├── index.html              # Main public website (CIS Edu inspired layout)
+├── about.html / school-history.html / why-choose-prelan.html   # About menu pages
+├── clubs.html / sports.html / facilities.html / meals-transport.html   # Student Life pages
 ├── 404.html                # Custom 404 Not Found page
 ├── admin/
 │   ├── login.html          # Staff administrator login with password reset
