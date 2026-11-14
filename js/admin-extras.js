@@ -32,7 +32,7 @@ if (isFirebaseConfigured()) {
     const snap = await getDocs(query(collection(db, "slides"), orderBy("order", "asc")));
     slides = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     const box = $("slides-list"); box.innerHTML = "";
-    if (!slides.length) box.innerHTML = '<p class="form-hint">No slides yet. The homepage is showing the built-in default slides. Click “+ Add Slide” to create your own.</p>';
+    if (!slides.length) box.innerHTML = '<p class="form-hint">No slides yet. The homepage hero is hidden until you add one. Click “+ Add Slide” to create your first slide.</p>';
     slides.forEach((s, i) => {
       const row = document.createElement("div");
       row.style.cssText = "display:flex;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid #eee;flex-wrap:wrap";

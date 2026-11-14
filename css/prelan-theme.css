@@ -330,3 +330,22 @@ body { font-size: 15.5px; line-height: 1.7; }
 .fac-body h3 { margin: 0 0 6px; color: var(--brand-dark); }
 .fac-body p { margin: 0; color: var(--muted); }
 .card-photo { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 4px; margin-bottom: 14px; display: block; }
+
+
+/* ===== v20261114: slider polish (1.8 s hold + gentle zoom), vision/mission/values ===== */
+.slider-track { background: var(--brand-deep); }                       /* calm placeholder while slide 1 loads (no layout jump) */
+.slide > img { background: var(--brand-deep); }
+@media (prefers-reduced-motion: no-preference) {
+  .slide.is-active > img { animation: slideZoom 3.2s ease-out both; }
+}
+@keyframes slideZoom { from { transform: scale(1); } to { transform: scale(1.06); } }
+
+.vmv { background: var(--cream, #fbf3e4); padding: clamp(34px, 6vw, 64px) 0; }
+.vmv h2 { text-align: center; margin-bottom: 1.2rem; }
+.vmv-grid { display: grid; gap: 18px; grid-template-columns: 1fr; margin-top: 1rem; }
+@media (min-width: 800px) { .vmv-grid { grid-template-columns: repeat(3, 1fr); } }
+.vmv-card { background: #fff; border-radius: 14px; padding: 22px 22px 20px; box-shadow: 0 2px 14px rgba(51,32,15,.08); border-top: 5px solid var(--accent, #f2b632); }
+.vmv-card h3 { margin: 0 0 .5rem; color: var(--brand, #5a3a22); }
+.vmv-card p { margin: 0; }
+.vmv-values { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.vmv-values li { background: var(--brand, #5a3a22); color: #fff; border-radius: 999px; padding: 6px 14px; font-weight: 600; font-size: .92rem; }

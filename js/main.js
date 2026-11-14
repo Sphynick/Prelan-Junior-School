@@ -3,21 +3,6 @@
  * Vanilla ES Modules with Firebase CDN integration
  */
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  getDocs,
-  query,
-  where,
-  orderBy,
-  limit,
-  doc,
-  getDoc,
-  serverTimestamp
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
 import { firebaseConfig, isFirebaseConfigured } from "./firebase-config.js";
 import {
   validateKenyanPhone,
@@ -32,17 +17,33 @@ import {
   renderApplicationForm
 } from "./utils.js";
 
-// Initialize Firebase if configured
+/**
+ * Firebase is loaded LAZILY (only on pages/actions that really need it: gallery, reviews,
+ * FAQ, news and the forms). Pages such as Home, About or Contact no longer download the
+ * Firebase SDK at all, which is the biggest single speed-up for the public site.
+ */
 let db = null;
-const isConfigured = isFirebaseConfigured();
+let initializeApp, getApps, getFirestore, collection, addDoc, getDocs, query, where, orderBy, limit, doc, getDoc, serverTimestamp;
+let firebaseLoading = null;
 
-if (isConfigured) {
-  try {
-    const app = initializeApp(firebaseConfig);
-    db = getFirestore(app);
-  } catch (err) {
-    console.warn("Firebase initialization warning:", err);
+function loadFirebase() {
+  if (!isFirebaseConfigured()) return Promise.resolve();
+  if (!firebaseLoading) {
+    firebaseLoading = (async () => {
+      try {
+        const [appMod, fsMod] = await Promise.all([
+          import("https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"),
+          import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js")
+        ]);
+        ({ initializeApp, getApps } = appMod);
+        ({ getFirestore, collection, addDoc, getDocs, query, where, orderBy, limit, doc, getDoc, serverTimestamp } = fsMod);
+        db = getFirestore(getApps()[0] || initializeApp(firebaseConfig));
+      } catch (err) {
+        console.warn("Firebase initialization warning:", err);
+      }
+    })();
   }
+  return firebaseLoading;
 }
 
 /* ==========================================================================
@@ -51,8 +52,8 @@ if (isConfigured) {
 const FALLBACK_SETTINGS = {
   phone: "+254 714 865 779",
   whatsapp: "+254 714 865 779",
-  email: "Prelanjuniorsch@gmail.com",
-  address: "",
+  email: "prelanjuniorsch@gmail.com",
+  address: "P.O. Box 740-00618 Ruaraka",
   officeHours: "Mon – Fri: 7:30 AM – 4:30 PM | Sat: 8:30 AM – 12:30 PM",
   heroTitle: "Nurturing Every Learner's Potential Through CBE Excellence",
   heroSubtitle: "Prelan Junior School provides a grounded, supportive environment where learners build real-life competencies, strong character, and a lifelong passion for discovery.",
@@ -114,7 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initYear();
   initHeader();
   initLightbox();
-  loadSiteSettings();
+  (window.requestIdleCallback ? (fn) => window.requestIdleCallback(fn, { timeout: 2000 }) : (fn) => setTimeout(fn, 50))(loadSiteSettings);
   loadGallery();
   loadReviews();
   loadFAQs();
@@ -171,11 +172,21 @@ function initYear() {
 async function loadSiteSettings() {
   let settings = FALLBACK_SETTINGS;
 
-  if (db) {
+  if (isFirebaseConfigured()) {
     try {
-      const snap = await getDoc(doc(db, "settings", "general"));
-      if (snap.exists()) {
-        settings = { ...FALLBACK_SETTINGS, ...snap.data() };
+      // Plain REST call: a few hundred bytes instead of the whole Firebase SDK.
+      const url = `https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/settings/general?key=${encodeURIComponent(firebaseConfig.apiKey)}`;
+      const r = await fetch(url);
+      if (r.ok) {
+        const j = await r.json();
+        const live = {};
+        for (const k in (j.fields || {})) {
+          const v = j.fields[k];
+          const val = "stringValue" in v ? v.stringValue : "booleanValue" in v ? v.booleanValue : "integerValue" in v ? Number(v.integerValue) : undefined;
+          // Ignore empty values so a blank admin field never wipes out the school's real details.
+          if (val !== undefined && val !== "") live[k] = val;
+        }
+        settings = { ...FALLBACK_SETTINGS, ...live };
       }
     } catch (e) {
       console.log("Loading settings fallback:", e.message);
@@ -263,6 +274,7 @@ async function loadGallery() {
 
   let items = [];
 
+  await loadFirebase();
   if (db) {
     try {
       const q = query(collection(db, "gallery"), orderBy("createdAt", "desc"), limit(24));
@@ -462,6 +474,7 @@ async function loadReviews() {
 
   let reviews = [];
 
+  await loadFirebase();
   if (db) {
     try {
       // Only approved reviews appear publicly
@@ -588,7 +601,8 @@ function initReviewModal() {
       }
 
       try {
-        if (db) {
+        await loadFirebase();
+  if (db) {
           await addDoc(collection(db, "reviews"), {
             author,
             childInfo,
@@ -623,6 +637,7 @@ async function loadFAQs() {
 
   let faqs = [];
 
+  await loadFirebase();
   if (db) {
     try {
       const q = query(collection(db, "faq"), orderBy("order", "asc"));
@@ -688,6 +703,7 @@ async function loadNews() {
 
   let news = [];
 
+  await loadFirebase();
   if (db) {
     try {
       // No orderBy here (it would need a composite index); we sort in the browser instead.
@@ -822,6 +838,7 @@ function initApplyForm() {
       return;
     }
 
+    await loadFirebase();
     if (!db) {
       showError("The application service is temporarily unavailable. Please call the school office.");
       return;
@@ -936,7 +953,8 @@ function initVisitForm() {
     };
 
     try {
-      if (db) {
+      await loadFirebase();
+  if (db) {
         await addDoc(collection(db, "visits"), visitData);
       } else {
         // Fallback local persistence simulation
@@ -1007,7 +1025,8 @@ function initNewsletterForm() {
     submitBtn.textContent = "...";
 
     try {
-      if (db) {
+      await loadFirebase();
+  if (db) {
         await addDoc(collection(db, "subscribers"), {
           email,
           createdAt: serverTimestamp ? serverTimestamp() : new Date()
