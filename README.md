@@ -211,6 +211,13 @@ Before opening the site to parents, verify the following:
 1. **Enable sign-in methods:** Firebase Console > Authentication > Sign-in method > enable **Google** AND **Email/Password**. Email/password parents must verify their email (a link is sent automatically) before they can see child details or post a review.
 2. **Authorised domains:** Authentication > Settings > Authorised domains > add `prelanschools.com` and `www.prelanschools.com`.
 3. **Publish `firestore.rules`** again (new `slides`, `children`, and parent-owned `reviews` rules).
-4. **Slides:** Admin > Homepage Slides. Until you add one, built-in default slides show.
+4. **Slides:** Admin > Homepage Slides. The homepage shows ONLY the slides added there (each stays 1.8 s, then slides over 0.7 s; change `SLIDE_DELAY_MS` in `js/home.js`). With no active slide the hero section is hidden. There are no built-in slides any more.
 5. **Learners:** Admin > Learners. A parent sees a child only when the Google email matches the "Parent Google email" saved there.
 6. **Reviews:** parents submit from the Parent Portal; approve them in Admin > Parent Reviews. Editing a published review sends it back to Pending.
+
+
+## Update 14 Nov 2026
+- Hero slider: hard-coded slides removed; admin-only; 1.8 s delay with sliding + gentle zoom animation.
+- Speed: Firebase SDK is no longer downloaded on Home/About/Contact etc. (slides and settings use Firestore REST; the SDK loads only for gallery, reviews, FAQ, news and forms); non-blocking Google Fonts; slides cached in the browser; images recompressed (about 3.6 MB saved) and unused heavy files removed; long cache headers in `vercel.json` / `firebase.json`.
+- Contact: P.O. Box 740-00618 Ruaraka, +254 714 865 779, prelanjuniorsch@gmail.com (footer on every page + Contact page). Vision, Mission and School Values added to Home and About.
+- Kindergarten photo (keyboard) replaced with the nap-time photo (`assets/images/toddler-640.jpg` / `toddler-1200.jpg`).

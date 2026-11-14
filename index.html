@@ -13,12 +13,19 @@
   <meta property="og:description"
     content="Prelan Junior School offers Competency Based Education through Kindergarten (Crèche and Reception / Playgroup), Primary (Grades 1–6) and Junior Secondary (Grades 7–9).">
   <link rel="icon" type="image/png" href="/favicon.png">
+  <link rel="preconnect" href="https://firestore.googleapis.com">
+  <link rel="modulepreload" href="/js/home.js?v=20261114a">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600&family=Roboto:wght@400;500;700&display=swap"
-    rel="stylesheet">
-  <link rel="stylesheet" href="/css/site.css?v=20261111f">
-  <link rel="stylesheet" href="/css/prelan-theme.css?v=20261111f">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600&family=Roboto:wght@400;500;700&display=swap"
+    media="print" onload="this.media='all'">
+  <noscript>
+    <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600&family=Roboto:wght@400;500;700&display=swap">
+  </noscript>
+  <link rel="stylesheet" href="/css/site.css?v=20261114a">
+  <link rel="stylesheet" href="/css/prelan-theme.css?v=20261114a">
 </head>
 
 <body>
@@ -141,7 +148,7 @@
     <section class="slider" id="hero-slider" aria-roledescription="carousel"
       aria-label="Prelan Junior School highlights" tabindex="0">
       <div class="slider-track" aria-live="off">
-        <div class="slider-strip">
+        <div class="slider-strip"></div>
       </div>
       <button type="button" class="slider-btn prev" aria-label="Previous slide">&#8249;</button>
       <button type="button" class="slider-btn next" aria-label="Next slide">&#8250;</button>
@@ -174,9 +181,41 @@
             practical and project-based, building critical thinking, creativity, digital skills and teamwork, and
             preparing learners for each next stage.</p>
           <h3>Our Values</h3>
-          <p>Respect, honesty, self-discipline and responsibility to the community are at the heart of school life.</p>
+          <p>Respect, Responsibility, Patriotism, Peace, Love, Integrity and Social Justice are at the heart of school
+            life.</p>
           <h3>Our Care</h3>
           <p>Individual attention, nutritious hot meals and a secure, serene campus with school transport.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ VISION · MISSION · VALUES ============ -->
+    <section class="vmv" aria-labelledby="vmv-title">
+      <div class="container">
+        <h2 id="vmv-title">Our Vision, Mission &amp; Values</h2>
+        <div class="vmv-grid">
+          <article class="vmv-card">
+            <h3>Our Vision</h3>
+            <p>To provide an environment with a welcoming atmosphere, enabling us to nurture our children's talents as
+              they learn to empower their future.</p>
+          </article>
+          <article class="vmv-card">
+            <h3>Our Mission</h3>
+            <p>To be an institution with a difference in provision of Early Childhood Learning, with the aim of bringing
+              up a holistic talented individual to fit in the dynamic world.</p>
+          </article>
+          <article class="vmv-card">
+            <h3>School Values</h3>
+            <ul class="vmv-values">
+              <li>Respect</li>
+              <li>Responsibility</li>
+              <li>Patriotism</li>
+              <li>Peace</li>
+              <li>Love</li>
+              <li>Integrity</li>
+              <li>Social justice</li>
+            </ul>
+          </article>
         </div>
       </div>
     </section>
@@ -245,14 +284,14 @@
       <h2>Our School</h2>
       <div class="tiers-flat">
         <a href="/programmes/kindergarten.html"><img src="/assets/images/toddler-640.jpg"
-            alt="A young Prelan learner playing the keyboard" loading="lazy">
+            alt="Kindergarten learners resting on colourful cots during nap time at Prelan" loading="lazy">
           <div>
             <h3>Kindergarten</h3>
             <p>Crèche <br>Reception / Playgroup </p>
           </div>
         </a>
-        <a href="/programmes/primary.html"><img src="/assets/images/cultural-640.jpg" alt="Learners in cultural attire"
-            loading="lazy">
+        <a href="/programmes/primary.html"><img src="/assets/images/gallery-pilots.jpg"
+            alt="Learners in cultural attire" loading="lazy">
           <div>
             <h3>Primary Section</h3>
             <p>Grades 1 to 6</p>
@@ -295,7 +334,8 @@
             height="49"></div>
         <p>Nurturing every learner from Crèche to Grade 9 through Competency Based Education.</p>
         <p><a data-phone-href data-phone-text href="tel:+254714865779">+254 714 865 779</a><br>
-          <a data-email-href data-email-text href="mailto:Prelanjuniorsch@gmail.com">Prelanjuniorsch@gmail.com</a>
+          <a data-email-href data-email-text href="mailto:prelanjuniorsch@gmail.com">prelanjuniorsch@gmail.com</a><br>
+          <span data-address>P.O. Box 740-00618 Ruaraka</span>
         </p>
         <div class="social-links">
           <a class="social-btn" href="https://www.facebook.com/p/Prelan-Junior-School-nyathuna-ngecha-100071204896163/"
@@ -366,7 +406,7 @@
     </div>
   </footer>
   <div class="mobile-bar" aria-label="Quick actions">
-    <a class="mb-call" data-phone-href href="tel:+254 714 865 7790"><svg viewBox="0 0 24 24" fill="none"
+    <a class="mb-call" data-phone-href href="tel:+254714865779"><svg viewBox="0 0 24 24" fill="none"
         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path
           d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" />
@@ -379,9 +419,9 @@
     <a class="mb-apply" href="/apply.html">Apply Now</a>
   </div>
 
-  <script type="module" src="/js/nav.js?v=20261111f"></script>
-  <script type="module" src="/js/main.js?v=20261111f"></script>
-  <script type="module" src="/js/home.js?v=20261111f"></script>
+  <script type="module" src="/js/home.js?v=20261114a"></script>
+  <script type="module" src="/js/nav.js?v=20261114a"></script>
+  <script type="module" src="/js/main.js?v=20261114a"></script>
 </body>
 
 </html>
