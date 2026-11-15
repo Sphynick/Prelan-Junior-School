@@ -14,7 +14,7 @@
  */
 import { firebaseConfig, isFirebaseConfigured } from "./firebase-config.js";
 
-const SLIDE_DELAY_MS = 3700;   // how long each slide stays on screen before moving on (1.8 s)
+const SLIDE_DELAY_MS = 4000;   // how long each slide stays on screen before moving on (1.8 s)
 const TRANSITION_MS = 700;    // how long the sliding animation itself takes
 const META_KEY = "prelan.slides.meta.v2";
 const IMG_KEY = "prelan.slides.img.";
